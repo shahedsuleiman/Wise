@@ -289,12 +289,11 @@ Dashboard.updatecourse = async (
   trainer,
   start_time,
   end_time,
-  category_id,
   site
 ) => {
   try {
     const result = await db.query(
-      "UPDATE courses SET title = $2, detail = $3, description = $4, trainer = $5, start_time = $6, end_time = $7, category_id = $8, site = $9 WHERE id = $1 RETURNING *",
+      "UPDATE courses SET title = $2, detail = $3, description = $4, trainer = $5, start_time = $6, end_time = $7, site = $8 WHERE id = $1 RETURNING *",
       [
         courseID,
         title,
@@ -303,7 +302,6 @@ Dashboard.updatecourse = async (
         trainer,
         start_time,
         end_time,
-        category_id,
         site,
       ]
     );
@@ -344,19 +342,6 @@ Dashboard.createlesson = async (courseID, videoUrl, title, description) => {
     [courseID, videoUrl, title, description]
   );
   return result.rows[0];
-};
-
-Dashboard.alllessons = async (courseID, page, pageSize) => {
-  try {
-    const offset = (page - 1) * pageSize;
-    const result = await db.query(
-      "SELECT lesson.id,lesson.title FROM lesson inner join courses on courses.id= lesson.course_id where courses.id=$1 and lesson.is_deleted = false LIMIT $1 OFFSET $2;",
-      [courseID, pageSize, offset]
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
 };
 
 Dashboard.lessonpage = async (lessonID) => {
@@ -598,7 +583,7 @@ Dashboard.getsentmessages = async (senderID, reciverID) => {
 
 Dashboard.allusers = async (page, pageSize, searchTerm, roleFilter) => {
   try {
-    const offset = (page - 1) * pageSize;
+    //const offset = (page - 1) * pageSize;
     let queryString = `SELECT users.id, users.first_name, users.last_name, users.user_name, users.email, users.is_deleted, roles.role FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.role != 'admin'`;
 
     const params = [];
@@ -615,11 +600,11 @@ Dashboard.allusers = async (page, pageSize, searchTerm, roleFilter) => {
       params.push(roleFilter);
     }
 
-    queryString += ` ORDER BY users.id LIMIT $${params.length + 1} OFFSET $${
-      params.length + 2
-    };`;
+    // queryString += ` ORDER BY users.id LIMIT $${params.length + 1} OFFSET $${
+    //   params.length + 2
+    // };`;
 
-    params.push(pageSize, offset);
+    //  params.push(pageSize, offset);
 
     const queryResult = await db.query(queryString, params);
     return queryResult.rows;
@@ -633,7 +618,7 @@ Dashboard.countusers = async () => {
     const result = await db.query(
       "select count(id) from users where is_deleted = false"
     );
-    return result.rows;
+    return result.rows[0].count;
   } catch (err) {
     throw err;
   }
@@ -642,9 +627,9 @@ Dashboard.countusers = async () => {
 Dashboard.countcourses = async () => {
   try {
     const result = await db.query(
-      "select count(id) from courses where category_id = 1 or category_id = 2 where is_deleted = false"
+      "select count(id) from courses where is_deleted = false and (courses.category_id = 1 or courses.category_id = 2 )"
     );
-    return result.rows;
+    return result.rows[0].count;
   } catch (err) {
     throw err;
   }
@@ -652,9 +637,9 @@ Dashboard.countcourses = async () => {
 Dashboard.countworkshops = async () => {
   try {
     const result = await db.query(
-      "select count(id) from courses where category_id = 3 or category_id = 4 where is_deleted = false"
+      "SELECT count(id) FROM courses WHERE is_deleted = false AND (courses.category_id = 3 OR courses.category_id = 4)"
     );
-    return result.rows;
+    return result.rows[0].count;
   } catch (err) {
     throw err;
   }
@@ -665,17 +650,18 @@ Dashboard.counttechtips = async () => {
     const result = await db.query(
       "select count(id) from techtips where is_deleted = false "
     );
-    return result.rows;
+    return result.rows[0].count;
   } catch (err) {
     throw err;
   }
 };
+
 Dashboard.countfaq = async () => {
   try {
     const result = await db.query(
       "select count(id) from faq where is_deletedq = false and is_deleteda = false"
     );
-    return result.rows;
+    return result.rows[0].count;
   } catch (err) {
     throw err;
   }
@@ -687,7 +673,7 @@ Dashboard.countlessons = async (courseID) => {
       "select count(id) from lesson where course_id =$1 and is_deleted = false",
       [courseID]
     );
-    return result.rows;
+    return result.rows[0].count;
   } catch (err) {
     throw err;
   }

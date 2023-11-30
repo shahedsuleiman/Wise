@@ -35,6 +35,7 @@ const createcourse = async (req, res) => {
       const imageBuffer = req.file ? req.file.buffer : null;
 
       const imageUrl = await uploadImageToFirebase(imageBuffer);
+      console.log(imageUrl);
       await addToGoogleCalendar(title, start_time, end_time, description);
       await Dashboard.createcourse(
         title,
@@ -43,7 +44,7 @@ const createcourse = async (req, res) => {
         trainer,
         start_time,
         end_time,
-        req.body.category_id, // Use category_id directly from req.body
+        req.body.category_id,
         imageUrl,
         is_paid,
         site
@@ -137,8 +138,10 @@ const allcourses = async (req, res, next) => {
       categoryFilter,
       isPaidFilter
     );
-
-    res.status(200).json(course);
+    const totalCount = await Dashboard.countcourses();
+    const totalPages = Math.ceil(totalCount / pageSize);
+    console.log(totalCount, totalPages);
+    res.status(200).json({ course, totalCount, totalPages });
   } catch (err) {
     console.error(err);
     res.status(400).json({ success: false, error: "Error in getting courses" });
@@ -167,7 +170,11 @@ const allworkshops = async (req, res, next) => {
       isPaidFilter
     );
 
-    res.status(200).json(course);
+    const totalCount = await Dashboard.countworkshops();
+    const totalPages = Math.ceil(totalCount / pageSize);
+    console.log(totalCount, totalPages);
+
+    res.status(200).json({ course, totalCount, totalPages });
   } catch (err) {
     console.error(err);
     res
@@ -200,16 +207,8 @@ const updatecourse = async (req, res) => {
     //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
     // }
 
-    const {
-      title,
-      detail,
-      description,
-      trainer,
-      start_time,
-      end_time,
-      category_id,
-      site,
-    } = req.body;
+    const { title, detail, description, trainer, start_time, end_time, site } =
+      req.body;
     const courseID = req.params.id;
 
     console.log("Request Body:", req.body);
@@ -222,7 +221,6 @@ const updatecourse = async (req, res) => {
       trainer,
       start_time,
       end_time,
-      category_id,
       site
     );
 
@@ -332,18 +330,24 @@ const uploadVideoToFirebase = async (videoBuffer) => {
 
 const alllessons = async (req, res, next) => {
   try {
-    // const { role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const courseID = req.params.id;
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
-    const course = await Dashboard.alllessons(courseID, page, pageSize);
+    const lessons = await Dashboard.alllessons(courseID, page, pageSize);
+    const totalCount = await Dashboard.countlessons(courseID);
+    const totalPages = Math.ceil(totalCount / pageSize);
+    console.log(totalCount, totalPages);
 
-    res.status(200).json(course);
+    res.status(200).json({ lessons, totalCount, totalPages });
   } catch (err) {
     console.error(err);
     res.status(400).json({ success: false, error: "Error in getting lessons" });
@@ -406,8 +410,11 @@ const alltechtips = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
     const course = await Dashboard.alltechtips(page, pageSize);
+    const totalCount = await Dashboard.counttechtips();
+    const totalPages = Math.ceil(totalCount / pageSize);
+    console.log(totalCount, totalPages);
 
-    res.status(200).json(course);
+    res.status(200).json({ course, totalCount, totalPages });
   } catch (err) {
     console.error(err);
     res
@@ -479,7 +486,11 @@ const allquestions = async (req, res, next) => {
     const pageSize = parseInt(req.query.pageSize) || 10;
     const question = await Dashboard.allquestions(page, pageSize);
 
-    res.status(200).json(question);
+    const totalCount = await Dashboard.countfaq();
+    const totalPages = Math.ceil(totalCount / pageSize);
+    console.log(totalCount, totalPages);
+
+    res.status(200).json({ question, totalCount, totalPages });
   } catch (err) {
     console.error(err);
     res
@@ -656,17 +667,15 @@ const allusers = async (req, res) => {
     //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
     // }
 
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    // const page = parseInt(req.query.page) || 1;
+    // const pageSize = parseInt(req.query.pageSize) || 10;
     const searchTerm = req.query.search || "";
     const roleFilter = req.query.role || "";
-    const users = await Dashboard.allusers(
-      page,
-      pageSize,
-      searchTerm,
-      roleFilter
-    );
-    return res.status(200).json({ succes: true, users });
+    const users = await Dashboard.allusers(searchTerm, roleFilter);
+    const totalCount = await Dashboard.countusers();
+    //const totalPages = Math.ceil(totalCount / pageSize);
+    //console.log(totalCount, totalPages);
+    return res.status(200).json({ succes: true, users, totalCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Internal server error" });

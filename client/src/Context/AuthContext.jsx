@@ -9,12 +9,10 @@ export const AuthProvider = ({ children }) => {
   const [headers, setHeaders] = useState([]);
 
   const login = (Token) => {
-    // Cookies.set("authToken", token, { expires: 7 });
     setIsLoggedIn(true);
     setHeaders({ token: Token });
   };
   const register = (Token) => {
-    // Cookies.set("authToken", token, { expires: 7 });
     setIsRegistered(true);
     setHeaders({ token: Token });
   };

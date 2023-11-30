@@ -33,10 +33,10 @@ function Subscription() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center absolute top-2/5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-solid bg-white p-4 sm:p-6 md:p-8 max-w-md w-11/12 md:w-[40rem] rounded-3xl mb-80">
+      <div className="flex justify-center  border-indigo-950 absolute top-2/5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-solid bg-white p-4 sm:p-6 md:p-8 max-w-md w-11/12 md:w-[40rem] rounded-3xl mb-80">
         <div className="w-full">
           <div className="flex flex-col  pb-4">
-            <div className="flex flex-row justify-between items-center border-b border-solid border-black bg-[#F7F1EE]">
+            <div className="flex flex-row justify-between items-center border-b border-solid  bg-[#F7F1EE]">
               <div className="font-bold">Premium Membership</div>
               <div className="font-bold">$70.00</div>
             </div>

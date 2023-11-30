@@ -7,7 +7,7 @@ import { useAuth } from "../Context/AuthContext";
 
 function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, isRegistered } = useAuth();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -46,7 +46,7 @@ function Header() {
               <button
                 type="button"
                 className={`${
-                  isLoggedIn ? "flex" : "hidden"
+                  isRegistered ? "flex" : "hidden"
                 }  flex-1  justify-end items-center align-center shadow-sm shadow-[#292742] text-white bg-indigo-950 hover:bg-indigo-900 font-medium rounded-lg text-sm px-2 py-2.5 md:ml-1 md:px-10 `}
               >
                 Profile
