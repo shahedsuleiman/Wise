@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function SearchBar({ onSearch }) {
+function CoursesSearch({ onSearch }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleInputChange = (event) => {
@@ -16,7 +16,7 @@ function SearchBar({ onSearch }) {
       <div class="  overflow-hidden bg-white px-6 py-20 text-center sm:px-16 sm:shadow-sm ">
         <p class="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-4xl">
           Empower Your Journey:
-          <br /> Dive into Cutting-edge Tech Workshops
+          <br /> Dive into Cutting-edge Tech Courses
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -49,4 +49,4 @@ function SearchBar({ onSearch }) {
   );
 }
 
-export default SearchBar;
+export default CoursesSearch;

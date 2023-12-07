@@ -15,6 +15,7 @@ Course.allelderliescourses = async () => {
         courses.start_time,
         courses.end_time,
         courses.site,
+        courses.is_paid,
         courses.is_deleted
       FROM 
         courses
@@ -49,6 +50,7 @@ Course.allelderliescourses = async () => {
           expires: "01-01-2500",
         });
         row.image = url;
+        row.is_paid = row.is_paid ? "Paid" : "Free";
 
         return row;
       })
@@ -72,7 +74,9 @@ Course.allelderliesworkshops = async () => {
         categories.category,
         courses.start_time,
         courses.end_time,
-        courses.site
+        courses.site,
+        courses.is_paid,
+        courses.is_deleted
       FROM 
         courses
         INNER JOIN categories ON categories.id = courses.category_id
@@ -108,7 +112,7 @@ Course.allelderliesworkshops = async () => {
           expires: "01-01-2500",
         });
         row.image = url;
-
+        row.is_paid = row.is_paid ? "Paid" : "Free";
         return row;
       })
     );
@@ -401,21 +405,42 @@ Course.alllessonspaid = async (userID, courseID) => {
 
     if (userRoleResult.rows.length > 0) {
       const userRole = userRoleResult.rows[0].role;
+
+      console.log("userRole:", userRole);
+
+      let result;
+
       if (userRole === "subscriber") {
-        const registerQuery =
-          "SELECT lesson.id, lesson.title FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false order by lesson.created_at";
-        const registerResult = await db.query(registerQuery, [courseID]);
-        return registerResult.rows;
+        result = await db.query(
+          "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id INNER JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
+          [courseID]
+        );
       } else if (userRole === "unsubscriber") {
-        const registerQuery =
-          "SELECT lesson.id, lesson.title FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false order by lesson.created_at limit 2 ";
-        const registerResult = await db.query(registerQuery, [courseID]);
-        return registerResult.rows;
+        result = await db.query(
+          "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id INNER JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false limit 2;",
+          [courseID]
+        );
       }
+
+      const formattedResult = await Promise.all(
+        result.rows.map(async (row) => {
+          const imageRef = storage.bucket().file("images/" + row.image);
+          const [url] = await imageRef.getSignedUrl({
+            action: "read",
+            expires: "01-01-2500",
+          });
+          row.image = url;
+
+          return row;
+        })
+      );
+
+      return formattedResult;
     } else {
       throw new Error("User not found or is deleted.");
     }
   } catch (err) {
+    console.error("Error:", err);
     throw err;
   }
 };
@@ -423,11 +448,24 @@ Course.alllessonspaid = async (userID, courseID) => {
 Course.alllessonsfree = async (courseID) => {
   try {
     const result = await db.query(
-      "SELECT lesson.id, lesson.title FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false order by lesson.created_at ",
+      "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id INNER JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
       [courseID]
     );
 
-    return result.rows;
+    const formattedResult = await Promise.all(
+      result.rows.map(async (row) => {
+        const imageRef = storage.bucket().file("images/" + row.image);
+        const [url] = await imageRef.getSignedUrl({
+          action: "read",
+          expires: "01-01-2500",
+        });
+        row.image = url;
+
+        return row;
+      })
+    );
+
+    return formattedResult;
   } catch (err) {
     throw err;
   }

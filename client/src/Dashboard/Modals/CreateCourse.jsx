@@ -5,7 +5,20 @@ import axios from "axios";
 // import "firebase/storage";
 
 function CreateCourse({ addcourse, closeModal, addedCourse }) {
-  const [createCourse, setCreatedCourse] = useState(addcourse);
+  const [createCourse, setCreatedCourse] = useState(
+    addcourse || {
+      title: "",
+      detail: "",
+      description: "",
+      trainer: "",
+      category_id: 0,
+      is_paid: false,
+      image: null,
+      site: "",
+      start_time: "",
+      end_time: "",
+    }
+  );
   const [image, setImage] = useState(null);
 
   const handleInputChange = (e) => {
@@ -14,27 +27,35 @@ function CreateCourse({ addcourse, closeModal, addedCourse }) {
   };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
+    // setImage(file);
+    setCreatedCourse((prevData) => ({ ...prevData, image: file }));
   };
 
-  const handleUpdate = async () => {
+const handleUpdate = async () => {
     try {
-      // createCourse.append("image", image);
-      // Upload image to Firebase Storage
-      // if (image) {
-      //   const storageRef = storage().ref();
-      //   const imageRef = storageRef.child(`images/${image.name}`);
-      //   await imageRef.put(image);
-      //   const imageUrl = await imageRef.getDownloadURL();
-      //   setCreatedCourse({ ...createCourse, image: imageUrl }); // Update the image URL in createCourse state
-      // }
+      const form = new FormData();
+      form.append("title", createCourse.title);
+      form.append("detail", createCourse.detail);
+      form.append("description", createCourse.description);
+      form.append("trainer", createCourse.trainer);
+      form.append("category_id", createCourse.category_id);
+      form.append("is_paid", createCourse.is_paid);
+      form.append("site", createCourse.site);
+      form.append("start_time", createCourse.start_time);
+      form.append("end_time", createCourse.end_time);
+      form.append("image", createCourse.image); // Append the image as a file
 
       // Make the API call
       const response = await axios.post(
-        `http://localhost:8080/dashboard/createcourse`,
-        createCourse
+        "http://localhost:8080/dashboard/createcourse",
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
+          },
+        }
       );
-      console.log(image);
+
       addedCourse(response.data);
       closeModal();
     } catch (error) {
@@ -118,7 +139,7 @@ function CreateCourse({ addcourse, closeModal, addedCourse }) {
               onChange={handleInputChange}
               className="border rounded-md px-2 py-1 mb-2 w-full"
             >
-              <option value="true">Paid</option>
+              <option value="zrue">Paid</option>
               <option value="false">Free</option>
             </select>
           </div>

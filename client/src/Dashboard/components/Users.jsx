@@ -29,6 +29,23 @@ function Users() {
     );
     setUsers(updatedUsers);
   };
+  const toggleBlockUser = async (userId, isDeleted) => {
+    try {
+      console.log("Toggling user block status for user ID:", userId);
+      console.log("Is Deleted:", isDeleted);
+      const updatedUserData = { ...selectedUser, is_deleted: !isDeleted };
+      const response = await axios.put(
+        `http://localhost:8080/dashboard/deleteuser/${userId}`,
+        updatedUserData
+      );
+
+      if (response.status === 200) {
+        updateUser(updatedUserData);
+      }
+    } catch (error) {
+      console.error("Error toggling user block status: ", error);
+    }
+  };
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -61,26 +78,6 @@ function Users() {
   const closeModal = () => {
     setSelectedUser(null);
     setShowModal(false);
-  };
-  const softDeleteUser = (userId) => {
-    const updatedUsers = users.map((user) =>
-      user.id === userId ? { ...user, is_delete: true } : user
-    );
-    setUsers(updatedUsers);
-
-    axios
-      .put(`http://localhost:3000/users/${userId}`, { is_delete: true })
-      .then((response) => {
-        console.log("User soft deleted:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error soft deleting user: ", error);
-        // Rollback changes in case of error
-        const rollbackUsers = users.map((user) =>
-          user.id === userId ? { ...user, is_delete: false } : user
-        );
-        setUsers(rollbackUsers);
-      });
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -198,19 +195,7 @@ function Users() {
                       className={index % 2 !== 0 ? "bg-white" : "bg-[#F7F1EE]"}
                     >
                       <td class="py-3 ps-4">
-                        <div class="flex items-center h-5">
-                          <input
-                            id="hs-table-pagination-checkbox-1"
-                            type="checkbox"
-                            class="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                          />
-                          <label
-                            for="hs-table-pagination-checkbox-1"
-                            class="sr-only"
-                          >
-                            Checkbox
-                          </label>
-                        </div>
+                        <div class="flex items-center h-5"></div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                         {user.first_name}
@@ -230,17 +215,14 @@ function Users() {
                       <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <button
                           type="button"
-                          onClick={() => openModal(user)}
-                          class="inline-flex mr-2 items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                          onClick={() =>
+                            toggleBlockUser(user.id, user.is_deleted)
+                          }
+                          className={`justify-center inline-flex w-20 bg-indigo-950 items-center text-sm font-semibold rounded-lg border border-transparent text-white ${
+                            user.is_deleted ? "bg-red-500" : "bg-indigo-950"
+                          } disabled:opacity-50 disabled:pointer-events-none`}
                         >
-                          <img className="  h-6 w-6 " src={edit} alt="" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => softDeleteUser(user.id)}
-                          class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                        >
-                          <img className=" h-6 w-6 " src={deletee} alt="" />
+                          {user.is_deleted ? "Unblock" : "Block"}
                         </button>
                       </td>
                     </tr>

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import contact from "../assets/contact.jpg";
 import { motion } from "framer-motion";
-import FilterList from "../Components/FilterList";
 import SearchBar from "../Components/SearchBar";
 import { Link } from "react-router-dom";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { useNavigate } from "react-router-dom";
+import FilterWorkshop from "../Components/FilterWorkshop";
+import Pagination from "../Components/Pagination";
 
 function Workshops() {
   useEffect(() => {
@@ -17,8 +18,9 @@ function Workshops() {
   const [workshopData, setWorkshopData] = useState([]);
   const [filteredWorkshops, setFilteredWorkshops] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortType, setSortType] = useState(""); // State to store the selected filter type
-
+  const [sortType, setSortType] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 3;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,28 +51,53 @@ function Workshops() {
 
     if (type === "Date") {
       sortedWorkshops = [...filteredWorkshops].sort((a, b) => {
-        // Assuming start_time is a string in format YYYY-MM-DD, adjust the sorting logic accordingly
-        // Sorting from newest to oldest based on start_time
         return new Date(b.start_time) - new Date(a.start_time);
       });
     } else {
-      // Handle other filter types if needed
     }
 
     setFilteredWorkshops(sortedWorkshops);
+  };
+
+  const filterByType = (type) => {
+    if (type.toLowerCase() === "all") {
+      setFilteredWorkshops(workshopData);
+    } else {
+      const filtered = workshopData.filter(
+        (workshop) => workshop.category.toLowerCase() === type.toLowerCase()
+      );
+      setFilteredWorkshops(filtered);
+    }
   };
   const cardVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0 },
   };
+
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+
+  const currentCards = filteredWorkshops.slice(
+    indexOfFirstCard,
+    indexOfLastCard
+  );
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <>
       <Header />
       <SearchBar onSearch={filterWorkshops} />
-      <FilterList filterByDate={filterByDate} />
+      <FilterWorkshop filterByDate={filterByDate} filterByType={filterByType} />
       <main className="md:px-20  justify-center items-center sm:px-14 px-6 flex flex-col ">
-        {filteredWorkshops.length > 0 ? (
-          filteredWorkshops.map((workshop) => (
+        {currentCards.length > 0 ? (
+          currentCards.map((workshop) => (
             <motion.div
               key={workshop.id}
               variants={cardVariants}
@@ -101,6 +128,9 @@ function Workshops() {
                     <p className="text-white mb-2 md:mb-6">
                       {workshop.description}
                     </p>
+                    <p className="text-white mb-2 md:mb-6">
+                      {workshop.category}
+                    </p>
                     <Link to={`/workshopsDetail/${workshop.id}`}>
                       <button class="mt-6 inline-block rounded-xl border-2 px-10 py-3 font-semibold border-white hover:bg-white hover:text-indigo-950">
                         {" "}
@@ -124,6 +154,13 @@ function Workshops() {
             </div>
           </div>
         )}
+        <Pagination
+          currentPage={currentPage}
+          cardsPerPage={cardsPerPage}
+          totalCards={filteredWorkshops.length}
+          paginate={paginate}
+          handlePageChange={handlePageChange}
+        />
       </main>
       <Footer />
     </>

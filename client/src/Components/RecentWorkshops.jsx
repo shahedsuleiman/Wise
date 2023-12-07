@@ -36,25 +36,28 @@ function RecentWorkshops() {
           <div className="upcoming-sec text-indigo-950 border-b border-gray-500 pb-5">
             <div className="heading text-2xl">Upcoming Workshops</div>
           </div>
-          <div className="upcoming-event-list text-gray-500">
-            <div className="carousel" style={{ backgroundColor: "#F7F1EE " }}>
+          <div className="upcoming-event-list text-gray-500 relative">
+            <div
+              className="carousel  relative"
+              style={{
+                backgroundColor: "#F7F1EE",
+                height: "405px",
+                position: "relative",
+                overflowY: "hidden",
+              }}
+            >
               {workshops.map((workshop, index) => (
                 <div
                   key={index}
                   className={`event-block py-5 border-b border-gray-500 ${
                     index === currentSlide ? "active-slide" : "hidden-slide"
                   }`}
+                  style={{ height: "100%" }}
                 >
                   <div className="flex flex-wrap items-center">
                     <div className="lg:w-1/6 text-center">
-                      <table className="w-full">
-                        <tr>
-                          <td className="text-2xl font-bold">Jan</td>
-                        </tr>
-                        <tr>
-                          <td className="text-2xl font-bold">27</td>
-                        </tr>
-                      </table>
+                      <div className="text-2xl font-bold">Jan</div>
+                      <div className="text-2xl font-bold">27</div>
                     </div>
                     <div className="lg:w-2/6 lg:pl-5">
                       <img
@@ -68,43 +71,29 @@ function RecentWorkshops() {
                         {workshop.title}
                       </div>
                       <div className="venue text-sm">
-                        <table>
-                          <tr>
-                            <td>
-                              <i className="fa fa-map-marker"></i>
-                            </td>
-                            <td>
-                              <div>{workshop.category}</div>
-                              <div className="dim-color">
-                                <a
-                                  href="https://www.google.co.in"
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  Get Directions
-                                </a>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
+                        <div>
+                          <i className="fa fa-map-marker"></i>{" "}
+                          {workshop.category}
+                        </div>
+                        <div className="dim-color">
+                          <a
+                            href="https://www.google.co.in"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Get Directions
+                          </a>
+                        </div>
                       </div>
                       <div className="time text-sm py-3">
-                        <table>
-                          <tr>
-                            <td>
-                              <i className="fa fa-clock-o"></i>
-                            </td>
-                            <td>
-                              <div>
-                                {workshop.start_time} - {workshop.end_time}
-                              </div>
-                              <div
-                                data-livestamp="1517054400"
-                                className="dim-color"
-                              ></div>
-                            </td>
-                          </tr>
-                        </table>
+                        <div>
+                          <i className="fa fa-clock-o"></i>{" "}
+                          {workshop.start_time} - {workshop.end_time}
+                        </div>
+                        <div
+                          data-livestamp="1517054400"
+                          className="dim-color"
+                        ></div>
                       </div>
                       <div className="sort-story overflow-hidden">
                         {workshop.description}
@@ -121,8 +110,46 @@ function RecentWorkshops() {
                 </div>
               ))}
             </div>
-            <button onClick={handlePrevSlide}>Previous</button>
-            <button onClick={handleNextSlide}>Next</button>
+            <div className="absolute inset-y-0 flex items-center justify-between w-full px-4">
+              <button
+                onClick={handlePrevSlide}
+                className=" text-indigo-950 px-4 py-2 rounded"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-6 w-6 text-indigo-950`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={handleNextSlide}
+                className="text-indigo-950 px-4 py-2 rounded"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-6 w-6 text-indigo-950`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>

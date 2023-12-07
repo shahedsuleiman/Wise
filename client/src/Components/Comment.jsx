@@ -8,7 +8,7 @@ function Comment() {
   const [cookies] = useCookies(["token"]);
   const [commentData, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  const { id } = useParams(); // Assuming you have 'workshopId' in the route params
+  const { id } = useParams();
   const token = cookies.Token;
   const { headers } = useAuth();
 

@@ -3,8 +3,11 @@ import axios from "axios";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Link } from "react-router-dom";
-
+import { useAuth } from "../Context/AuthContext";
+import { useCookies } from "react-cookie";
 function Techtip() {
+  const [cookies] = useCookies(["token"]);
+  const token = cookies.Token;
   useEffect(() => {
     window.scrollTo(0, 0);
     <></>;
@@ -14,6 +17,7 @@ function Techtip() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.get("http://localhost:8080/alltechtips");
         setPosts(response.data);
       } catch (error) {
@@ -81,9 +85,7 @@ function Techtip() {
                     <h4 class="text-lg mb-3 font-semibold">{post.title}</h4>
                   </button>{" "}
                 </Link>
-                <p class="mb-2 text-sm text-gray-600">
-                  how to make the future better !!!!!{/* {post.short_detail} */}
-                </p>
+            
                 <img src={post.image} class="w-full h-60" alt="" />
                 <hr class="mt-4" />
                 <span class="text-xs">ARTICLE</span>

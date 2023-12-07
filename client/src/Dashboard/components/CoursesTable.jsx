@@ -150,12 +150,12 @@ function CoursesTable() {
                         >
                           Title
                         </th>
-                        <th
+                        {/* <th
                           scope="col"
                           class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                         >
                           Detail
-                        </th>
+                        </th> */}
                         <th
                           scope="col"
                           class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
@@ -197,14 +197,14 @@ function CoursesTable() {
                           scope="col"
                           class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                         >
-                          Start_Time
+                          Date
                         </th>
-                        <th
+                        {/* <th
                           scope="col"
                           class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                         >
                           End_Time
-                        </th>
+                        </th> */}
                         <th
                           scope="col"
                           class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase"
@@ -223,26 +223,12 @@ function CoursesTable() {
                             }
                           >
                             <td class="py-3 ps-4">
-                              <div class="flex items-center h-5">
-                                <input
-                                  id="hs-table-pagination-checkbox-1"
-                                  type="checkbox"
-                                  class="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                                />
-                                <label
-                                  for="hs-table-pagination-checkbox-1"
-                                  class="sr-only"
-                                >
-                                  Checkbox
-                                </label>
-                              </div>
+                              <div class="flex items-center h-5"></div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                               {course.title}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.detail}
-                            </td>
+
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {course.description}
                             </td>
@@ -270,9 +256,9 @@ function CoursesTable() {
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {course.start_time}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {/* <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {course.end_time}
-                            </td>
+                            </td> */}
                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                               <button
                                 type="button"

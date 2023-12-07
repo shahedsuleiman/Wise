@@ -9,26 +9,42 @@ function CreateWorkshop({ addWorkshop, closeModal, addedWorkshop }) {
     const { name, value } = e.target;
     setCreatedWorkshop({ ...createWorkshop, [name]: value });
   };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
-    setCreatedWorkshop.append(file);
+    setCreatedWorkshop((prevData) => ({ ...prevData, image: file }));
   };
 
   const handleUpdate = async () => {
     try {
-      //   console.log("added course:", updatedCourse); // Log the updatedCourse before making the request
+      const form = new FormData();
+      form.append("title", createWorkshop.title);
+      form.append("detail", createWorkshop.detail);
+      form.append("description", createWorkshop.description);
+      form.append("trainer", createWorkshop.trainer);
+      form.append("category_id", createWorkshop.category_id);
+      form.append("is_paid", createWorkshop.is_paid);
+      form.append("site", createWorkshop.site);
+      form.append("start_time", createWorkshop.start_time);
+      form.append("end_time", createWorkshop.end_time);
+      form.append("image", createWorkshop.image); // Append the image as a file
 
+      // Make the API call
       const response = await axios.post(
-        `http://localhost:8080/dashboard/createcourse`,
-        createWorkshop
+        "http://localhost:8080/dashboard/createcourse",
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
+          },
+        }
       );
 
       addedWorkshop(response.data);
-
       closeModal();
     } catch (error) {
-      console.error("Error updating course:", error);
+      console.error("Error updating workshop:", error);
     }
   };
   return (
@@ -135,7 +151,7 @@ function CreateWorkshop({ addWorkshop, closeModal, addedWorkshop }) {
         <div className="flex flex-col gap-y-2">
           <label className="font-bold">Start Time</label>
           <input
-            type="date"
+            type="datetime-local"
             name="start_time"
             value={createWorkshop.start_time}
             onChange={handleInputChange}
@@ -145,7 +161,7 @@ function CreateWorkshop({ addWorkshop, closeModal, addedWorkshop }) {
         <div className="flex flex-col gap-y-2">
           <label className="font-bold">End Time</label>
           <input
-            type="date"
+            type="datetime-local"
             name="end_time"
             value={createWorkshop.end_time}
             onChange={handleInputChange}

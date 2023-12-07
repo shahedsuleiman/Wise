@@ -16,11 +16,7 @@ router.get("/dashboard/techtipdetail/:id", dashboardController.techtipdetail);
 router.put("/dashboard/updatecourse/:id", dashboardController.updatecourse);
 router.put("/dashboard/updatetechtip/:id", dashboardController.updatetechtip);
 router.put("/dashboard/deletecourse/:id", dashboardController.deletecourse);
-router.put(
-  "/dashboard/deletetechtip/:id",
-  middleware.authorize,
-  dashboardController.deletetechtip
-);
+router.put("/dashboard/deletetechtip/:id", dashboardController.deletetechtip);
 router.put("/dashboard/deleteuser/:id", dashboardController.deleteuser);
 router.post("/dashboard/createlesson/:id", dashboardController.createlesson);
 router.get("/dashboard/alllessons/:id", dashboardController.alllessons);

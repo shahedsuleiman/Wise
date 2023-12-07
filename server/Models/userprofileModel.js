@@ -322,27 +322,35 @@ Profile.mywatchedvideos = async (userID) => {
   }
 };
 
-Profile.checkUserExistence = async (email, user_name, phonenumber) => {
-  const checkEmail = await db.query("SELECT * FROM users WHERE email = $1;", [
-    email,
-  ]);
-  const checkUsername = await db.query(
-    "SELECT * FROM users WHERE user_name = $1;",
-    [user_name]
-  );
-  const checkPhone = await db.query(
-    "SELECT * FROM users WHERE phonenumber = $1;",
-    [phonenumber]
-  );
+Profile.checkUserExistence = async (email, user_name, phonenumber, userID) => {
+  if (email) {
+    const checkEmail = await db.query(
+      "SELECT * FROM users WHERE email = $1 AND id <> $2;",
+      [email, userID]
+    );
+    if (checkEmail.rows.length > 0) {
+      throw new Error("invalid email");
+    }
+  }
 
-  if (checkEmail.rows.length > 0) {
-    throw new Error("invalid email");
+  if (user_name) {
+    const checkUsername = await db.query(
+      "SELECT * FROM users WHERE user_name = $1 AND id <> $2;",
+      [user_name, userID]
+    );
+    if (checkUsername.rows.length > 0) {
+      throw new Error("invalid username");
+    }
   }
-  if (checkUsername.rows.length > 0) {
-    throw new Error("invalid username");
-  }
-  if (checkPhone.rows.length > 0) {
-    throw new Error("invalid phonenumber");
+
+  if (phonenumber) {
+    const checkPhone = await db.query(
+      "SELECT * FROM users WHERE phonenumber = $1 AND id <> $2;",
+      [phonenumber, userID]
+    );
+    if (checkPhone.rows.length > 0) {
+      throw new Error("invalid phonenumber");
+    }
   }
 
   return true;
@@ -371,6 +379,14 @@ Profile.updatepassword = async (userID, hashedPassword) => {
   const result = await db.query(
     "update users set password = $2 where id = $1",
     [userID, hashedPassword]
+  );
+  return result.rows;
+};
+
+Profile.unrolled = async (courseID, userID) => {
+  const result = await db.query(
+    "update course_attendances set is_deleted = true where course_attendances.course_id = $1 and user_id = $2",
+    [courseID, userID]
   );
   return result.rows;
 };

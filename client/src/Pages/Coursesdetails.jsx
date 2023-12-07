@@ -8,6 +8,7 @@ import { useAuth } from "../Context/AuthContext";
 import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import CommentCourses from "../Components/CommentCourses";
 
 function Coursesdetails() {
   const [cookies] = useCookies(["token"]);
@@ -19,10 +20,12 @@ function Coursesdetails() {
   const [courseDetails, setCourseDetails] = useState([]);
   const [courseLessons, setCourseLessons] = useState([]);
   const { id } = useParams();
+  const [currentVideo, setCurrentVideo] = useState(null);
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
+        axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.get(
           `http://localhost:8080/elderlies/detail/${id}`
         );
@@ -34,7 +37,7 @@ function Coursesdetails() {
     };
 
     fetchCourseDetails();
-  }, [id]);
+  }, [id, token]);
 
   useEffect(() => {
     const fetchCourseLessons = async () => {
@@ -45,20 +48,45 @@ function Coursesdetails() {
         );
         setCourseLessons(response.data);
         console.log("Course Lessons API response:", response.data);
+        if (
+          response.data.lessons &&
+          response.data.lessons.length > 0 &&
+          response.data.lessons[0].id
+        ) {
+          fetchLessonVideos(response.data.lessons[0].id);
+        }
       } catch (error) {
         console.error("Error fetching course lessons:", error.response);
       }
     };
 
     fetchCourseLessons();
-  }, [id]);
+  }, [id, token]);
+
+  const fetchLessonVideos = async (lessonId) => {
+    if (!lessonId) return; // Ensure lessonId is defined
+
+    try {
+      axios.defaults.headers.common["Authorization"] = token;
+      const response = await axios.get(
+        `http://localhost:8080/course/lesson/${lessonId}`
+      );
+      console.log(lessonId);
+      console.log(currentVideo);
+      setCurrentVideo(response.data.course[0].video);
+      console.log("video Lessons API response:", response.data);
+    } catch (error) {
+      console.error("Error fetching video lessons:", error.response);
+    }
+  };
+
   const navigate = useNavigate();
   const handleEnroll = async () => {
     try {
       const enrollmentData = {
         courseId: id,
       };
-
+      axios.defaults.headers.common["Authorization"] = token;
       const enrollResponse = await axios.post(
         `http://localhost:8080/courseregister/${id}`,
         enrollmentData,
@@ -75,7 +103,7 @@ function Coursesdetails() {
       Swal.fire({
         icon: "error",
         title: "Enrollment Failed",
-        text: "Yoy Have to subscribe :) ",
+        text: "You Have to subscribe :) ",
       }).then(() => {
         navigate("/pricing");
       });
@@ -88,9 +116,9 @@ function Coursesdetails() {
         <div className="lg:w-2/3 px-4">
           <div className="aspect-w-16 aspect-h-16">
             <iframe
-              title="hi"
+              title="lesson-video"
               className="w-full h-[30rem]"
-              src={courseLessons.video}
+              src={currentVideo}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
@@ -129,22 +157,21 @@ function Coursesdetails() {
                   <li
                     key={lesson.id}
                     className="flex items-center mb-4 pb-4 border-b border-dashed border-gray-300"
+                    onClick={() => fetchLessonVideos(lesson.id)}
+                    style={{ cursor: "pointer" }}
                   >
                     <div className="sidebar-thumb">
                       <img
                         className="animated rollIn bg-white border border-dashed border-gray-300 p-2 h-16 w-16 rounded-full"
-                        // src={lesson.image}
+                        src={lesson.image}
                         alt={lesson.title}
                       />
                     </div>
                     <div className="sidebar-content">
                       <h5 className="animated bounceInRight mb-0">
-                        <a
-                          href="/" // Update href as needed
-                          className="text-indigo-950 hover:text-indigo-900"
-                        >
+                        <button className="text-indigo-950 hover:text-indigo-900">
                           {lesson.title}{" "}
-                        </a>
+                        </button>
                       </h5>
                     </div>
                     <div className="sidebar-meta ml-auto">
@@ -161,6 +188,7 @@ function Coursesdetails() {
           </div>
         </div>
       </div>
+      <CommentCourses />
       <Footer />
     </>
   );

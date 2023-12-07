@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Link } from "react-router-dom";
-
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import CheckoutForm from "../Components/CheckoutForm";
 function Subscribe() {
   useEffect(() => {
     window.scrollTo(0, 0);
     <></>;
   }, []);
+  const stripePromise = loadStripe(
+    "pk_test_51O6ir2JHXfBpbbMkPbKEGUGpcDt2kKbOavmI201QuITZ8F3Y48KGAOPE3hvYfSuJcIdhDa8gk7KvAW2FeiwBDPF5004smsWbGA"
+  );
   return (
     <>
       <Header />
@@ -163,28 +168,30 @@ function Subscribe() {
                   </div>
                 </div>
 
-                <div class="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
-                  <div class="p-6">
-                    <h1 class="text-xl font-medium text-gray-700 capitalize lg:text-3xl dark:text-white">
+                <div className="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
+                  <div className="p-6">
+                    <h1 className="text-xl font-medium text-gray-700 capitalize lg:text-3xl dark:text-white">
                       Premium
                     </h1>
 
-                    <p class="mt-4 text-gray-500 dark:text-gray-300">
+                    <p className="mt-4 text-gray-500 dark:text-gray-300">
                       Lorem ipsum dolor sit amet consectetur, adipisicing elit.
                       Nostrum quam voluptatibus
                     </p>
 
-                    <h2 class="mt-4 text-2xl font-medium text-gray-700 sm:text-4xl dark:text-gray-300">
-                      $50.00{" "}
-                      <span class="text-base font-medium">/life time</span>
+                    <h2 className="mt-4 text-2xl font-medium text-gray-700 sm:text-4xl dark:text-gray-300">
+                      $70.00{" "}
+                      <span className="text-base font-medium">/life time</span>
                     </h2>
 
-                    <p class="mt-1 text-gray-500 dark:text-gray-300">
+                    <p className="mt-1 text-gray-500 dark:text-gray-300">
                       One time payment
                     </p>
 
-                    <button class="w-full px-4 py-2 mt-6 tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-900 rounded-md hover:bg-indigo-950 focus:outline-none focus:bg-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                      Start Now
+                    <button>
+                      <Elements stripe={stripePromise}>
+                        <CheckoutForm />
+                      </Elements>
                     </button>
                   </div>
 

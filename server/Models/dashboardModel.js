@@ -344,6 +344,18 @@ Dashboard.createlesson = async (courseID, videoUrl, title, description) => {
   return result.rows[0];
 };
 
+Dashboard.uploadlessonimage = async (lessonID, imageUrl) => {
+  try {
+    const result = await db.query(
+      "INSERT INTO lesson_image (lesson_id, image) VALUES ($1, $2)",
+      [lessonID, imageUrl]
+    );
+    return result.rows;
+  } catch (err) {
+    throw err;
+  }
+};
+
 Dashboard.lessonpage = async (lessonID) => {
   try {
     const queryResult = await db.query(
@@ -393,6 +405,7 @@ Dashboard.alltechtips = async (page, pageSize) => {
   techtips.id,
   techtips.title,
   techtips.short_detail,
+  techtips.detail,
   REPLACE(techtips.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image
 FROM 
   techtips
@@ -584,7 +597,7 @@ Dashboard.getsentmessages = async (senderID, reciverID) => {
 Dashboard.allusers = async (page, pageSize, searchTerm, roleFilter) => {
   try {
     //const offset = (page - 1) * pageSize;
-    let queryString = `SELECT users.id, users.first_name, users.last_name, users.user_name, users.email, users.is_deleted, roles.role FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.role != 'admin'`;
+    let queryString = `SELECT users.id, users.first_name, users.last_name, users.user_name, users.email,users.phonenumber, users.is_deleted, roles.role FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.role != 'admin'`;
 
     const params = [];
 

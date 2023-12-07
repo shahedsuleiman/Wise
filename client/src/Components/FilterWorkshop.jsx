@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-function FilterList({ filterByDate, filterByType }) {
+function FilterWorkshop({ filterByDate, filterByType }) {
   const [openSort, setOpenSort] = useState(false);
   const [sortType, setSortType] = useState("Sort by");
 
@@ -69,7 +69,7 @@ function FilterList({ filterByDate, filterByType }) {
               </Link>
               <Link
                 to="#"
-                onClick={() => filterByType("Online")}
+                onClick={() => filterByType("workshop-online")}
                 className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
               >
                 Online
@@ -77,7 +77,7 @@ function FilterList({ filterByDate, filterByType }) {
 
               <Link
                 to="#"
-                onClick={() => filterByType("Onsite")}
+                onClick={() => filterByType("workshop-onsite")}
                 className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
               >
                 Onsite
@@ -90,4 +90,4 @@ function FilterList({ filterByDate, filterByType }) {
   );
 }
 
-export default FilterList;
+export default FilterWorkshop;

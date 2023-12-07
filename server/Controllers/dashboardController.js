@@ -29,13 +29,13 @@ const createcourse = async (req, res) => {
         trainer,
         start_time,
         end_time,
+        category_id,
         is_paid,
         site,
       } = req.body;
       const imageBuffer = req.file ? req.file.buffer : null;
 
       const imageUrl = await uploadImageToFirebase(imageBuffer);
-      console.log(imageUrl);
       await addToGoogleCalendar(title, start_time, end_time, description);
       await Dashboard.createcourse(
         title,
@@ -44,7 +44,7 @@ const createcourse = async (req, res) => {
         trainer,
         start_time,
         end_time,
-        req.body.category_id,
+        category_id,
         imageUrl,
         is_paid,
         site
@@ -59,7 +59,6 @@ const createcourse = async (req, res) => {
     res.status(400).json({ success: false, error: "Course added failed" });
   }
 };
-
 async function addToGoogleCalendar(title, startTime, endTime, description) {
   try {
     const credentials = require("../calendar.json");
@@ -326,6 +325,34 @@ const uploadVideoToFirebase = async (videoBuffer) => {
 
   const videoUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
   return videoUrl;
+};
+
+const uploadlessonimage = async (req, res) => {
+  try {
+    // const {  role } = req.user;
+
+    // if (role !== 'admin') {
+    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
+    // }
+
+    upload(req, res, async function (err) {
+      if (err) {
+        return res.status(400).json({ success: false, error: err.message });
+      }
+      const lessonID = req.params.id;
+      const imageBuffer = req.file ? req.file.buffer : null;
+
+      const imageUrl = await uploadImageToFirebase(imageBuffer);
+      await Dashboard.uploadlessonimage(lessonID, imageUrl);
+
+      res
+        .status(201)
+        .json({ success: true, message: "image added successfully" });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ success: false, error: "image added failed" });
+  }
 };
 
 const alllessons = async (req, res, next) => {
