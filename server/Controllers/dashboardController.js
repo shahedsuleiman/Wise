@@ -8,6 +8,7 @@ const { admin } = require("../firebase");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single("image");
 const videoupload = multer({ storage: storage }).single("video");
+const moment = require("moment");
 
 const createcourse = async (req, res) => {
   try {
@@ -75,11 +76,11 @@ async function addToGoogleCalendar(title, startTime, endTime, description) {
       summary: title,
       description: description,
       start: {
-        dateTime: new Date(`${startTime}T00:00:00`).toISOString(),
+        dateTime: moment(startTime, "YYYY-MM-DD hh:mm A").toISOString(),
         timeZone: "Jordan Time (GMT+03:00)",
       },
       end: {
-        dateTime: new Date(`${endTime}T23:59:59`).toISOString(),
+        dateTime: moment(endTime, "YYYY-MM-DD hh:mm A").toISOString(),
         timeZone: "Jordan Time (GMT+03:00)",
       },
     };

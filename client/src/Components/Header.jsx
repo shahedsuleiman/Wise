@@ -159,7 +159,7 @@ function Header() {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard">
+                <Link>
                   <button
                     id="dropdownNavbarLink"
                     data-dropdown-toggle="dropdownNavbar"

@@ -97,7 +97,6 @@ Dashboard.allcourses = async (
             year: "numeric",
             month: "long",
             day: "numeric",
-            hour: "numeric",
           });
           if (row.end_time !== null) {
             row.end_time = row.end_time.toLocaleDateString("en-US", {
@@ -105,7 +104,6 @@ Dashboard.allcourses = async (
               year: "numeric",
               month: "long",
               day: "numeric",
-              hour: "numeric",
             });
           }
         }

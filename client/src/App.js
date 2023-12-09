@@ -16,7 +16,7 @@ import Coursesdetails from "./Pages/Coursesdetails";
 
 import AboutUs from "./Pages/AboutUs";
 import WorkshopDetails from "./Pages/WorkshopDetails";
-import Dashboard from "./Dashboard/pages/Dashboard";
+
 import NotFound from "./Pages/NotFound";
 import Profile from "./Pages/Profile";
 function App() {
@@ -54,7 +54,6 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/courseDetails/:id" element={<Coursesdetails />} />
             <Route path="/workshopsDetail/:id" element={<WorkshopDetails />} />
-            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </BrowserRouter>
       </header>

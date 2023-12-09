@@ -31,7 +31,7 @@ function CreateCourse({ addcourse, closeModal, addedCourse }) {
     setCreatedCourse((prevData) => ({ ...prevData, image: file }));
   };
 
-const handleUpdate = async () => {
+  const handleUpdate = async () => {
     try {
       const form = new FormData();
       form.append("title", createCourse.title);
@@ -139,7 +139,7 @@ const handleUpdate = async () => {
               onChange={handleInputChange}
               className="border rounded-md px-2 py-1 mb-2 w-full"
             >
-              <option value="zrue">Paid</option>
+              <option value="true">Paid</option>
               <option value="false">Free</option>
             </select>
           </div>

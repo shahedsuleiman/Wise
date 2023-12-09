@@ -2,68 +2,73 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import deletee from "../Assets/delete.png";
 import edit from "../Assets/edit.png";
-import CreateTechtip from "../Modals/CreateTechtip";
-import TechtipModal from "../Modals/TechtipModal";
+import CreateWorkshop from "../Modals/CreateWorkshop";
+import WorkshopModal from "../Modals/WorkshopModal";
 // import { useAuth } from "../Context/AuthContext";
 // import { useCookies } from "react-cookie";
 
-function Techtips() {
+function Workshops() {
   // const [cookies] = useCookies(["token"]);
-  const [Techtips, setTechtips] = useState([]);
+  const [Workshops, setWorkshops] = useState([]);
 
-  const [createTechtip, setCreatedTechtip] = useState({
+  const [createWorkshop, setCreatedWorkshop] = useState({
     title: "",
-    short_detail: "",
     detail: "",
+    description: "",
     trainer: "",
+    category_id: 0,
+    is_paid: false,
     image: null,
+    site: "",
+    start_time: "",
+    end_time: "",
   });
 
   //   const [currentPage, setCurrentPage] = useState(1);
   //   const [itemsPerPage] = useState(3);
   //   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedTechtip, setSelectedTechtip] = useState(null);
+  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   // const token = cookies.Token;
   // const { headers } = useAuth();
 
   useEffect(() => {
-    const fetchTechtip = async () => {
+    const fetchWorkshop = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/dashboard/alltechtips"
+          "http://localhost:8080/dashboard/allworkshops"
         );
         console.log(response.data.course);
 
-        setTechtips(response.data.course);
+        setWorkshops(response.data.course);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchTechtip();
+    fetchWorkshop();
   }, []);
 
-  const deleteTechtip = async (techtipId) => {
+  const deleteWorkshop = async (workshopId) => {
     try {
-      if (!techtipId) {
+      if (!workshopId) {
         console.error("Invalid workshop ID");
         return;
       }
       await axios.put(
-        `http://localhost:8080/dashboard/deletetechtip/${techtipId}`
+        `http://localhost:8080/dashboard/deletecourse/${workshopId}`
       );
 
-      setTechtips(Techtips.filter((techtip) => techtip.id !== techtipId));
-      console.log(`Workshop ${techtipId} deleted successfully.`);
+      setWorkshops(Workshops.filter((course) => course.id !== workshopId));
+      console.log(`Workshop ${workshopId} deleted successfully.`);
     } catch (error) {
-      console.error(`Error deleting workshop ${techtipId}:`, error);
+      console.error(`Error deleting workshop ${workshopId}:`, error);
     }
   };
 
-  const openModal = (techtip) => {
-    setSelectedTechtip(techtip);
+  const openModal = (workshop) => {
+    setSelectedWorkshop(workshop);
     setShowModal(true);
     console.log("Modal is opened"); // Log to check if this function runs
   };
@@ -71,15 +76,15 @@ function Techtips() {
   // Function to close modal
   const closeModal = () => {
     setShowModal(false);
-    setSelectedTechtip(null);
+    setSelectedWorkshop(null);
   };
 
-  const updateTechtip = (updatedTechtip) => {
-    const updatedTechtips = Techtips.map((techtip) =>
-      techtip.id === updatedTechtip.id ? updatedTechtip : techtip
+  const updateWorkshop = (updatedWorkshop) => {
+    const updatedWorkshops = Workshops.map((workshop) =>
+      workshop.id === updatedWorkshop.id ? updatedWorkshop : workshop
     );
 
-    setTechtips(updatedTechtips);
+    setWorkshops(updatedWorkshops);
   };
   return (
     <>
@@ -87,10 +92,10 @@ function Techtips() {
       <div class="flex flex-col mt-5">
         <hr />
         <h1 className=" mt-3 text-2xl font-semibold text-indigo-950  ">
-          Techtips Table
+          Workshops Table
         </h1>
 
-        <div class="-m-1.5 overflow-x-auto ">
+        <div class="-m-1.5 overflow-x-auto">
           <div class="p-1.5 min-w-full inline-block align-middle">
             <div class="border rounded-lg divide-y divide-gray-200 dark:border-gray-700 dark:divide-gray-700">
               <div class="flex justify-between items-center py-3 px-4">
@@ -133,7 +138,7 @@ function Techtips() {
                 </div>
               </div>
               <div class=" overflow-x-auto">
-                <div class="max-w-[600px]">
+                <div class="max-w-full">
                   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                       <tr>
@@ -146,19 +151,31 @@ function Techtips() {
                         >
                           Title
                         </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          ShortDetail
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          Detail
-                        </th>
 
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Description
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Trainer
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Category
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Type
+                        </th>
                         <th
                           scope="col"
                           class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
@@ -174,6 +191,18 @@ function Techtips() {
                         </th> */}
                         <th
                           scope="col"
+                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Start_Time
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        >
+                          End_Time
+                        </th>
+                        <th
+                          scope="col"
                           class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase"
                         >
                           Action
@@ -181,8 +210,8 @@ function Techtips() {
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                      {Techtips &&
-                        Techtips.map((techtip, index) => (
+                      {Workshops &&
+                        Workshops.map((workshop, index) => (
                           <tr
                             key={index}
                             className={
@@ -192,38 +221,51 @@ function Techtips() {
                             <td class="py-3 ps-4">
                               <div class="flex items-center h-5"></div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                              {techtip.title}
+                            <td class="px-6 py-4  text-sm font-medium text-gray-800 dark:text-gray-200">
+                              {workshop.title}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {techtip.short_detail}
+
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.description}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {techtip.detail}
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.trainer}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {techtip.image && (
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.category}
+                            </td>
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.is_paid}
+                            </td>
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.image && (
                                 <img
-                                  src={techtip.image}
+                                  src={workshop.image}
                                   className="h-10 w-10"
                                   alt="course_image"
                                 />
                               )}
                             </td>
-                            {/* <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {techtip.rate}
+                            {/* <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.rate}
                             </td> */}
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.start_time}
+                            </td>
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {workshop.end_time}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                               <button
                                 type="button"
-                                onClick={() => openModal(techtip)}
+                                onClick={() => openModal(workshop)}
                                 class="inline-flex mr-2 items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                               >
                                 <img className="  h-6 w-6 " src={edit} alt="" />
                               </button>
                               <button
                                 type="button"
-                                onClick={() => deleteTechtip(techtip.id)}
+                                onClick={() => deleteWorkshop(workshop.id)}
                                 class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                               >
                                 <img
@@ -239,17 +281,17 @@ function Techtips() {
                   </table>
                 </div>
                 {showModal && (
-                  <TechtipModal
-                    techtip={selectedTechtip}
+                  <WorkshopModal
+                    workshop={selectedWorkshop}
                     closeModal={closeModal}
-                    updateTechtip={updateTechtip}
+                    updateWorkshop={updateWorkshop}
                   />
                 )}
                 {showCreateModal && (
-                  <CreateTechtip
-                    addTechtip={createTechtip}
+                  <CreateWorkshop
+                    addWorkshop={createWorkshop}
                     closeModal={() => setShowCreateModal(false)}
-                    addedTechtip={setCreatedTechtip}
+                    addedWorkshop={setCreatedWorkshop}
                   />
                 )}
               </div>
@@ -301,4 +343,4 @@ function Techtips() {
   );
 }
 
-export default Techtips;
+export default Workshops;

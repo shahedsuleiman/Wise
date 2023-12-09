@@ -11,7 +11,12 @@ import ProfileWorkshop from "../Components/ProfileWorkshop";
 import PublecProfile from "../Components/PublecProfile";
 
 function Profile() {
+  const [showSidebar, setShowSidebar] = useState(false);
   const [activeTab, setActiveTab] = useState("userProfile");
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
 
   return (
     <>
@@ -25,7 +30,17 @@ function Profile() {
       />
 
       <div class="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">
-        <aside class="hidden py-4 md:w-1/3 lg:w-1/4 md:block">
+        <button
+          className="md:hidden fixed bottom-5 right-5 z-50 p-3 bg-indigo-950 text-white rounded"
+          onClick={toggleSidebar}
+        >
+          {showSidebar ? "Close" : "Menu"}
+        </button>
+        <aside
+          className={`${
+            showSidebar ? "block" : "hidden"
+          } md:block py-4 md:w-1/3 lg:w-1/4 `}
+        >
           <div class="sticky flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">
             <h2 class="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
             <button
@@ -70,7 +85,6 @@ function Profile() {
         </aside>
         <div className="w-4/5 p-4 h-full  bg-white  rounded-lg border-b-2 border-r-2 flex-grow ">
           {activeTab === "userProfile" && <PublecProfile />}
-
           {activeTab === "profileCourses" && <ProfileCourses />}
           {activeTab === "profileWorkshops" && <ProfileWorkshop />}
           {activeTab === "pass" && <ProfilePass />}

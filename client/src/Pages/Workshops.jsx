@@ -114,7 +114,7 @@ function Workshops() {
               <div class="relative mx-auto rounded-full  bg-white bg-opacity-20 bg-cover bg-center w-full mb-5 md:max-w-screen-lg">
                 <img
                   class="absolute h-full w-full object-cover"
-                  src={contact}
+                  src={workshop.image}
                   alt=""
                 />
                 <div class="text-white lg:w-1/2">
@@ -125,9 +125,9 @@ function Workshops() {
                     <h2 class="font-serif text-4xl font-bold">
                       {workshop.title}
                     </h2>
-                    <p className="text-white mb-2 md:mb-6">
+                    {/* <p className="text-white mb-2 md:mb-6">
                       {workshop.description}
-                    </p>
+                    </p> */}
                     <p className="text-white mb-2 md:mb-6">
                       {workshop.category}
                     </p>

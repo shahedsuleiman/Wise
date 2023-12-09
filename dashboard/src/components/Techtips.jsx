@@ -2,71 +2,68 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import deletee from "../Assets/delete.png";
 import edit from "../Assets/edit.png";
-import UpdateCourseModal from "../Modals/CourseModal";
-import CreateCourse from "../Modals/CreateCourse";
-import CourseModal from "../Modals/CourseModal";
+import CreateTechtip from "../Modals/CreateTechtip";
+import TechtipModal from "../Modals/TechtipModal";
 // import { useAuth } from "../Context/AuthContext";
 // import { useCookies } from "react-cookie";
 
-function CoursesTable() {
+function Techtips() {
   // const [cookies] = useCookies(["token"]);
-  const [courses, setCourses] = useState([]);
+  const [Techtips, setTechtips] = useState([]);
 
-  const [createCourse, setCreatedCourse] = useState({
+  const [createTechtip, setCreatedTechtip] = useState({
     title: "",
+    short_detail: "",
     detail: "",
-    description: "",
     trainer: "",
-    category_id: 0,
-    is_paid: false,
     image: null,
-    site: "",
-    start_time: "",
-    end_time: "",
   });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3);
-  const [searchTerm, setSearchTerm] = useState("");
+  //   const [currentPage, setCurrentPage] = useState(1);
+  //   const [itemsPerPage] = useState(3);
+  //   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedTechtip, setSelectedTechtip] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   // const token = cookies.Token;
   // const { headers } = useAuth();
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchTechtip = async () => {
       try {
-        // axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.get(
-          `http://localhost:8080/dashboard/allcourses`
+          "http://localhost:8080/dashboard/alltechtips"
         );
+        console.log(response.data.course);
 
-        setCourses(response.data.course);
+        setTechtips(response.data.course);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchCourses();
+    fetchTechtip();
   }, []);
 
-  const deleteCourse = async (courseId) => {
+  const deleteTechtip = async (techtipId) => {
     try {
-      // Make an API call to delete the course by its ID
+      if (!techtipId) {
+        console.error("Invalid workshop ID");
+        return;
+      }
       await axios.put(
-        `http://localhost:8080/dashboard/deletecourse/${courseId}`
+        `http://localhost:8080/dashboard/deletetechtip/${techtipId}`
       );
-      // Update the courses state after deletion
-      setCourses(courses.filter((course) => course.id !== courseId));
-      console.log(`Course ${courseId} deleted successfully.`);
+
+      setTechtips(Techtips.filter((techtip) => techtip.id !== techtipId));
+      console.log(`Workshop ${techtipId} deleted successfully.`);
     } catch (error) {
-      console.error(`Error deleting course ${courseId}:`, error);
+      console.error(`Error deleting workshop ${techtipId}:`, error);
     }
   };
 
-  const openModal = (course) => {
-    setSelectedCourse(course);
+  const openModal = (techtip) => {
+    setSelectedTechtip(techtip);
     setShowModal(true);
     console.log("Modal is opened"); // Log to check if this function runs
   };
@@ -74,27 +71,26 @@ function CoursesTable() {
   // Function to close modal
   const closeModal = () => {
     setShowModal(false);
-    setSelectedCourse(null);
+    setSelectedTechtip(null);
   };
 
-  const updateCourse = (updatedCourse) => {
-    const updatedCourses = courses.map((course) =>
-      course.id === updatedCourse.id ? updatedCourse : course
+  const updateTechtip = (updatedTechtip) => {
+    const updatedTechtips = Techtips.map((techtip) =>
+      techtip.id === updatedTechtip.id ? updatedTechtip : techtip
     );
 
-    setCourses(updatedCourses);
+    setTechtips(updatedTechtips);
   };
-
   return (
     <>
       {" "}
       <div class="flex flex-col mt-5">
         <hr />
         <h1 className=" mt-3 text-2xl font-semibold text-indigo-950  ">
-          Courses Table
+          Techtips Table
         </h1>
 
-        <div class="-m-1.5 overflow-x-auto">
+        <div class="-m-1.5 overflow-x-auto ">
           <div class="p-1.5 min-w-full inline-block align-middle">
             <div class="border rounded-lg divide-y divide-gray-200 dark:border-gray-700 dark:divide-gray-700">
               <div class="flex justify-between items-center py-3 px-4">
@@ -105,7 +101,7 @@ function CoursesTable() {
                       type="text"
                       name="hs-table-with-pagination-search"
                       id="hs-table-with-pagination-search"
-                      value={searchTerm}
+                      //   value={searchTerm}
                       // onChange={handleSearch}
                       class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                       placeholder="Search for items"
@@ -137,7 +133,7 @@ function CoursesTable() {
                 </div>
               </div>
               <div class=" overflow-x-auto">
-                <div class="max-w-[600px]">
+                <div class="max-w-full">
                   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                       <tr>
@@ -150,36 +146,13 @@ function CoursesTable() {
                         >
                           Title
                         </th>
-                        {/* <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          Detail
-                        </th> */}
                         <th
                           scope="col"
                           class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                         >
-                          Description
+                          ShortDetail
                         </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          Trainer
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          Category
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          Type
-                        </th>
+
                         <th
                           scope="col"
                           class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
@@ -187,23 +160,11 @@ function CoursesTable() {
                           Image
                         </th>
 
-                        <th
+                        {/* <th
                           scope="col"
                           class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase"
                         >
                           Rate
-                        </th>
-                        <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          Date
-                        </th>
-                        {/* <th
-                          scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
-                        >
-                          End_Time
                         </th> */}
                         <th
                           scope="col"
@@ -214,8 +175,8 @@ function CoursesTable() {
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                      {courses &&
-                        courses.map((course, index) => (
+                      {Techtips &&
+                        Techtips.map((techtip, index) => (
                           <tr
                             key={index}
                             className={
@@ -225,51 +186,36 @@ function CoursesTable() {
                             <td class="py-3 ps-4">
                               <div class="flex items-center h-5"></div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                              {course.title}
+                            <td class="px-6 py-4  text-sm font-medium text-gray-800 dark:text-gray-200">
+                              {techtip.title}
+                            </td>
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {techtip.short_detail}
                             </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.description}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.trainer}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.category}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.is_paid}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.image && (
+                            <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {techtip.image && (
                                 <img
-                                  src={course.image}
+                                  src={techtip.image}
                                   className="h-10 w-10"
                                   alt="course_image"
                                 />
                               )}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.rate}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.start_time}
-                            </td>
-                            {/* <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {course.end_time}
+                            {/* <td class="px-6 py-4  text-sm text-gray-800 dark:text-gray-200">
+                              {techtip.rate}
                             </td> */}
                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                               <button
                                 type="button"
-                                onClick={() => openModal(course)}
+                                onClick={() => openModal(techtip)}
                                 class="inline-flex mr-2 items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                               >
                                 <img className="  h-6 w-6 " src={edit} alt="" />
                               </button>
                               <button
                                 type="button"
-                                onClick={() => deleteCourse(course.id)}
+                                onClick={() => deleteTechtip(techtip.id)}
                                 class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                               >
                                 <img
@@ -285,17 +231,17 @@ function CoursesTable() {
                   </table>
                 </div>
                 {showModal && (
-                  <CourseModal
-                    course={selectedCourse}
+                  <TechtipModal
+                    techtip={selectedTechtip}
                     closeModal={closeModal}
-                    updateCourse={updateCourse}
+                    updateTechtip={updateTechtip}
                   />
                 )}
                 {showCreateModal && (
-                  <CreateCourse
-                    addcourse={createCourse}
-                    closeModal={() => setShowCreateModal(false)} // Close modal function
-                    addedCourse={setCreatedCourse}
+                  <CreateTechtip
+                    addTechtip={createTechtip}
+                    closeModal={() => setShowCreateModal(false)}
+                    addedTechtip={setCreatedTechtip}
                   />
                 )}
               </div>
@@ -305,7 +251,7 @@ function CoursesTable() {
                   <button
                     type="button"
                     // onClick={() => paginate(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    // disabled={currentPage === 1}
                     className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                   >
                     <span aria-hidden="true">«</span>
@@ -347,4 +293,4 @@ function CoursesTable() {
   );
 }
 
-export default CoursesTable;
+export default Techtips;

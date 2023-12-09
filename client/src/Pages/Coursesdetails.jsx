@@ -42,18 +42,34 @@ function Coursesdetails() {
   useEffect(() => {
     const fetchCourseLessons = async () => {
       try {
-        axios.defaults.headers.common["Authorization"] = token;
-        const response = await axios.get(
-          ` http://localhost:8080/course/${id}/allessons`
-        );
-        setCourseLessons(response.data);
-        console.log("Course Lessons API response:", response.data);
-        if (
-          response.data.lessons &&
-          response.data.lessons.length > 0 &&
-          response.data.lessons[0].id
-        ) {
-          fetchLessonVideos(response.data.lessons[0].id);
+        if (token) {
+          console.log(token);
+          axios.defaults.headers.common["Authorization"] = token;
+          const response = await axios.get(
+            `http://localhost:8080/course/${id}/allessonsauth`
+          );
+          setCourseLessons(response.data);
+          console.log("Course Lessons API response:", response.data);
+          if (
+            response.data.lessons &&
+            response.data.lessons.length > 0 &&
+            response.data.lessons[0].id
+          ) {
+            fetchLessonVideos(response.data.lessons[0].id);
+          }
+        } else {
+          const response = await axios.get(
+            `http://localhost:8080/course/${id}/allessons`
+          );
+          setCourseLessons(response.data);
+          console.log("Course Lessons API response:", response.data);
+          if (
+            response.data.lessons &&
+            response.data.lessons.length > 0 &&
+            response.data.lessons[0].id
+          ) {
+            fetchLessonVideos(response.data.lessons[0].id);
+          }
         }
       } catch (error) {
         console.error("Error fetching course lessons:", error.response);
@@ -64,7 +80,7 @@ function Coursesdetails() {
   }, [id, token]);
 
   const fetchLessonVideos = async (lessonId) => {
-    if (!lessonId) return; // Ensure lessonId is defined
+    if (!lessonId) return;
 
     try {
       axios.defaults.headers.common["Authorization"] = token;

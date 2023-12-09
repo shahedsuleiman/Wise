@@ -95,8 +95,8 @@ function WorkshopDetails() {
                 class="relative z-40 object-cover bg-cover w-full h-96"
               />
             </div>
-            <div className="flex flex-col">
-              <div class="w-full px-4 mb-10 lg:w-full lg:mb-0 ">
+            <div className="flex flex-col my-6 lg:flex-row">
+              <div class="w-full lg:w-1/2 px-4 mb-10 lg:mb-0 ">
                 <h2 class="py-3 pl-2 mb-4 text-2xl font-bold text-gray-700 border-l-4 border-indigo-950  dark:text-gray-300">
                   About this workshop:
                 </h2>
@@ -113,7 +113,46 @@ function WorkshopDetails() {
                   Enroll Now
                 </button>
               </div>
-              <div></div>
+
+              <div class="w-full lg:w-1/2 px-4">
+                <div class="border border-gray-300 p-4 rounded-md">
+                  <h2 class="text-lg font-semibold mb-2">
+                    Workshop Information
+                  </h2>
+                  <div class="flex flex-col gap-2">
+                    <div>
+                      <span class="font-semibold">Date:</span>{" "}
+                      {workshopData.course && workshopData.course[0].date ? (
+                        workshopData.course[0].date
+                      ) : (
+                        <span>Not available</span>
+                      )}
+                    </div>
+                    <div>
+                      <span class="font-semibold">Location:</span>{" "}
+                      {workshopData.course &&
+                      workshopData.course[0].location ? (
+                        workshopData.course[0].location
+                      ) : (
+                        <span>Not available</span>
+                      )}
+                    </div>
+                    <div class="flex items-center">
+                      <a
+                        href={
+                          workshopData.course &&
+                          workshopData.course[0].calendarLink
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-block px-4 py-2 bg-indigo-950 text-white rounded-md text-sm transition duration-300 hover:bg-opacity-80"
+                      >
+                        Add to Calendar
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

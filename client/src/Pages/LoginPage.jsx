@@ -34,7 +34,7 @@ const LoginPage = () => {
       const { token } = response.data || {};
       if (token) {
         Cookies.set("Token", token);
-        login();
+        login(token);
         console.log("Login successful", response.data);
         navigate("/");
       } else {
