@@ -27,23 +27,25 @@ function Techtips() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   // const token = cookies.Token;
   // const { headers } = useAuth();
+  const [page, setPage] = useState(1); // Current page
+  const [limit, setLimit] = useState(5); // Users per page
 
   useEffect(() => {
-    const fetchTechtip = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/dashboard/alltechtips"
-        );
-        console.log(response.data.course);
+    fetchTechtip(); // Fetch users when component mounts or when page or limit changes
+  }, [page, limit]);
 
-        setTechtips(response.data.course);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const fetchTechtip = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/dashboard/alltechtips?page=${page}&limit=${limit}`
+      );
+      console.log(response.data.course);
 
-    fetchTechtip();
-  }, []);
+      setTechtips(response.data.course);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const deleteTechtip = async (techtipId) => {
     try {
@@ -247,42 +249,44 @@ function Techtips() {
               </div>
               <div class="py-1 px-4">
                 <nav class="flex items-center space-x-1">
-                  {/* {currentPage > 1 && ( */}
                   <button
                     type="button"
-                    // onClick={() => paginate(currentPage - 1)}
-                    // disabled={currentPage === 1}
+                    onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                    disabled={page <= 1}
                     className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                   >
                     <span aria-hidden="true">«</span>
                     <span className="sr-only">Previous</span>
                   </button>
-                  {/* )} */}
 
-                  {/* {courses.length > 0 &&
-                    visiblePageNumbers.map((number) => ( */}
-                  <div key={""} className="min-w-[40px]">
-                    <button
-                      type="button"
-                      // onClick={() => paginate(number)}
-                      className="flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10"
-                    >
-                      {/* {number} */}
-                    </button>
+                  <div className="flex items-center space-x-2">
+                    {Array.from(
+                      { length: Math.ceil(Techtips.length / limit) },
+                      (_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setPage(index + 1)}
+                          className={`p-2.5 inline-flex items-center rounded-full text-sm font-medium ${
+                            page === index + 1
+                              ? "bg-indigo-950 text-white"
+                              : "text-gray-800 hover:bg-gray-100 dark:text-white dark:hover:bg-white/10"
+                          }`}
+                        >
+                          {index + 1}
+                        </button>
+                      )
+                    )}
                   </div>
-                  {/* ))} */}
 
-                  {/* {indexOfLastItem < courses.length && ( */}
                   <button
                     type="button"
-                    // onClick={() => paginate(currentPage + 1)}
-                    // disabled={indexOfLastItem >= courses.length}
+                    onClick={() => setPage(page + 1)}
+                    disabled={Techtips.length < limit}
                     className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                   >
                     <span className="sr-only">Next</span>
                     <span aria-hidden="true">»</span>
                   </button>
-                  {/* )} */}
                 </nav>
               </div>
             </div>

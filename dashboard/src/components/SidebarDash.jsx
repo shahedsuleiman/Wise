@@ -6,10 +6,21 @@ import CoursesTable from "./CoursesTable";
 import Workshops from "./Workshops";
 import Techtips from "./Techtips";
 import Tables from "./Tables";
+import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function SidebarDash() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
+  const { isLoggedIn, logout, isRegistered } = useAuth();
+  const navigate = useNavigate();
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+  const handleLogout = () => {
+    logout();
+    navigate("/"); // Navigating to the login page
+  };
   return (
     <>
       <div>
@@ -26,7 +37,11 @@ function SidebarDash() {
               class=" flex-1 flex flex-col "
               style={{ backgroundColor: "#F7F1EE " }}
             >
-              <nav class="flex-1 px-2 pb-4 ">
+              <nav
+                className={`${
+                  showSidebar ? "block" : "hidden"
+                }flex-1 px-2 pb-4 `}
+              >
                 <button
                   className={`text-indigo-950 hover:bg-indigo-950 hover:text-white group flex items-center px-5 py-2   w-full text-sm font-medium rounded-md 
                   ${
@@ -34,7 +49,6 @@ function SidebarDash() {
                       ? "bg-indigo-950 text-white"
                       : "#F7F1EE"
                   }`}
-                  onClick={() => setActiveTab("dashboard")}
                 >
                   Dashboard
                 </button>
@@ -76,7 +90,7 @@ function SidebarDash() {
                 </button>
 
                 <button
-                  className={`text-indigo-950 hover:bg-indigo-950 hover:text-white group flex items-center px-5 py-2   w-full text-sm font-medium rounded-md 
+                  className={`}text-indigo-950 hover:bg-indigo-950 hover:text-white group flex items-center px-5 py-2   w-full text-sm font-medium rounded-md 
                   ${
                     activeTab === "techtips"
                       ? "bg-indigo-950 text-white"
@@ -88,12 +102,14 @@ function SidebarDash() {
                 </button>
 
                 <button class="text-indigo-950 hover:bg-indigo-950 hover:text-white group flex items-center px-5 py-2  w-full  text-sm font-medium rounded-md">
-                  Lessons
-                </button>
-                <button class="text-indigo-950 hover:bg-indigo-950 hover:text-white group flex items-center px-5 py-2  w-full  text-sm font-medium rounded-md">
                   Faq
                 </button>
-                <button class="text-indigo-950 hover:bg-indigo-950 hover:text-white group flex items-center px-5 py-2  w-full text-sm font-medium rounded-md">
+                <button
+                  className="text-indigo-950 hover:bg-indigo-950 hover:text-white group flex items-center px-5 py-2  w-full text-sm font-medium rounded-md"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
                   Logout
                 </button>
               </nav>
@@ -101,30 +117,41 @@ function SidebarDash() {
           </div>
         </div>
         <div class="md:pl-64 flex flex-col flex-1">
-          <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow">
-            <button
-              type="button"
-              class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
-            >
-              <span class="sr-only">Open sidebar</span>
+          {/* <div class=" top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow"> */}
+          <button
+            className="md:hidden fixed bottom-5 right-5 z-50 p-3 bg-indigo-950 text-white rounded"
+            onClick={toggleSidebar}
+          >
+            {showSidebar ? "Close" : "Menu"}
 
-              <svg
-                class="h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
+            {/* Toggle icon */}
+            <svg
+              className="h-6 w-6 ml-2"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              {showSidebar ? (
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
                 />
-              </svg>
-            </button>
-          </div>
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+
+          {/* </div> */}
 
           <main>
             <div class="py-6">

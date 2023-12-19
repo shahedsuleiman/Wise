@@ -19,6 +19,9 @@ import WorkshopDetails from "./Pages/WorkshopDetails";
 
 import NotFound from "./Pages/NotFound";
 import Profile from "./Pages/Profile";
+import EmailForgot from "./Pages/EmailForgot";
+import VerifyCode from "./Pages/VerifyCode";
+import ResetPass from "./Pages/ResetPass";
 function App() {
   return (
     <div className="App">
@@ -54,6 +57,9 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/courseDetails/:id" element={<Coursesdetails />} />
             <Route path="/workshopsDetail/:id" element={<WorkshopDetails />} />
+            <Route path="/emailForgot" element={<EmailForgot />} />
+            <Route path="/verify-code" element={<VerifyCode />} />
+            <Route path="/reset-password" element={<ResetPass />} />
           </Routes>
         </BrowserRouter>
       </header>

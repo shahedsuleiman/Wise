@@ -47,6 +47,7 @@ Dashboard.allcourses = async (
             courses.id,
             courses.title,
             courses.description,
+            courses.detail,
             courses.trainer,
             REPLACE(courses.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image,
             categories.category,
@@ -334,23 +335,45 @@ Dashboard.deleteuser = async (userID) => {
   }
 };
 
-Dashboard.createlesson = async (courseID, videoUrl, title, description) => {
-  const result = await db.query(
-    "INSERT INTO lesson (course_id,video,title,description) VALUES ($1, $2,$3,$4) RETURNING *",
-    [courseID, videoUrl, title, description]
-  );
-  return result.rows[0];
-};
-
-Dashboard.uploadlessonimage = async (lessonID, imageUrl) => {
+Dashboard.createlesson = async (courseID, videoUrl, title) => {
   try {
     const result = await db.query(
-      "INSERT INTO lesson_image (lesson_id, image) VALUES ($1, $2)",
-      [lessonID, imageUrl]
+      "INSERT INTO lesson (course_id,video,title) VALUES ($1, $2,$3) RETURNING *",
+      [courseID, videoUrl, title]
     );
-    return result.rows;
+    return result.rows[0];
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+Dashboard.alllessons = async (courseID) => {
+  try {
+    const result = await db.query(
+      "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id LEFT JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
+      [courseID]
+    );
+
+    const formattedResult = await Promise.all(
+      result.rows.map(async (row) => {
+        if (row.image) {
+          const imageRef = storage.bucket().file("images/" + row.image);
+          const [url] = await imageRef.getSignedUrl({
+            action: "read",
+            expires: "01-01-2500",
+          });
+          row.image = url;
+        }
+
+        return row;
+      })
+    );
+
+    return formattedResult;
   } catch (err) {
-    throw err;
+    console.error(err);
+    return [];
   }
 };
 
@@ -381,6 +404,18 @@ Dashboard.lessonpage = async (lessonID) => {
       })
     );
     return formattedResult;
+  } catch (err) {
+    throw err;
+  }
+};
+
+Dashboard.uploadlessonimage = async (lessonID, imageUrl) => {
+  try {
+    const result = await db.query(
+      "INSERT INTO lesson_image (lesson_id, image) VALUES ($1, $2)",
+      [lessonID, imageUrl]
+    );
+    return result.rows;
   } catch (err) {
     throw err;
   }
@@ -439,6 +474,7 @@ Dashboard.techtipdetail = async (techId) => {
         SELECT 
             techtips.id,
             techtips.title,
+            techtips.short_detail,
             techtips.detail,
             REPLACE(techtips.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image
         FROM 
@@ -496,7 +532,7 @@ Dashboard.allquestions = async (page, pageSize) => {
   try {
     const offset = (page - 1) * pageSize;
     const result = await db.query(
-      "SELECT faq.id,faq.question,users.user_name from faq  inner join  users on users.id = faq.user_id where faq.is_deletedq = false LIMIT $1 OFFSET $2;",
+      "SELECT faq.id,users.user_name ,faq.question,faq.answer from faq  inner join  users on users.id = faq.user_id where faq.is_deletedq = false LIMIT $1 OFFSET $2;",
       [pageSize, offset]
     );
     return result.rows;
@@ -592,30 +628,23 @@ Dashboard.getsentmessages = async (senderID, reciverID) => {
   }
 };
 
-Dashboard.allusers = async (page, pageSize, searchTerm, roleFilter) => {
+Dashboard.allusers = async (page, pageSize) => {
   try {
-    //const offset = (page - 1) * pageSize;
+    const offset = (page - 1) * pageSize;
     let queryString = `SELECT users.id, users.first_name, users.last_name, users.user_name, users.email,users.phonenumber, users.is_deleted, roles.role FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.role != 'admin'`;
 
     const params = [];
 
-    if (searchTerm) {
-      queryString += ` AND LOWER(users.user_name) LIKE LOWER($${
-        params.length + 1
-      })`;
-      params.push(`%${searchTerm}%`);
-    }
+    // if (roleFilter) {
+    //   queryString +=  AND LOWER(roles.role) = LOWER($${params.length + 1});
+    //   params.push(roleFilter);
+    // }
 
-    if (roleFilter) {
-      queryString += ` AND LOWER(roles.role) = LOWER($${params.length + 1})`;
-      params.push(roleFilter);
-    }
+    queryString += ` ORDER BY users.id LIMIT $${params.length + 1} OFFSET $${
+      params.length + 2
+    }; `;
 
-    // queryString += ` ORDER BY users.id LIMIT $${params.length + 1} OFFSET $${
-    //   params.length + 2
-    // };`;
-
-    //  params.push(pageSize, offset);
+    params.push(pageSize, offset);
 
     const queryResult = await db.query(queryString, params);
     return queryResult.rows;
@@ -627,9 +656,12 @@ Dashboard.allusers = async (page, pageSize, searchTerm, roleFilter) => {
 Dashboard.countusers = async () => {
   try {
     const result = await db.query(
-      "select count(id) from users where is_deleted = false"
+      `SELECT COUNT(users.id) AS user_count
+      FROM users
+      INNER JOIN roles ON users.role_id = roles.id
+      WHERE roles.role != 'admin' AND users.is_deleted = false;`
     );
-    return result.rows[0].count;
+    return result.rows[0].user_count;
   } catch (err) {
     throw err;
   }

@@ -20,9 +20,11 @@ router.post("/chatbot", async (req, res) => {
   try {
     await chatbotController.trainAndSave();
 
-    const defaultResponse = "Default answer for unknown question";
+    const defaultResponse = "Default answer for an unknown question";
 
-    const responses = messages.map((message) => {
+    const responses = [];
+
+    for (const message of messages) {
       const lowerCaseMessage = message.toLowerCase().replace(/\s/g, "");
       const strippedMessage = lowerCaseMessage.replace(/[^\w\s]/gi, "");
 
@@ -33,14 +35,17 @@ router.post("/chatbot", async (req, res) => {
         (q) => q.toLowerCase().replace(/\s/g, "") === strippedMessage
       );
 
+      let question = message;
+      let answer = defaultResponse;
+
       if (indexBye !== -1) {
-        return greetingsByeData.answers[indexBye];
+        answer = greetingsByeData.answers[indexBye];
       } else if (indexHello !== -1) {
-        return greetingsHelloData.answers[indexHello];
-      } else {
-        return defaultResponse;
+        answer = greetingsHelloData.answers[indexHello];
       }
-    });
+
+      responses.push({ question, answer });
+    }
 
     res.json({ responses });
   } catch (error) {

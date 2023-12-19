@@ -8,23 +8,17 @@ import RecentWorkshops from "../Components/RecentWorkshops";
 import Guide from "../Components/Guide";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import ChatBot from "../Components/ChatBot";
 
 function Home() {
-  const [isSignIn, setSignin] = useState(false);
-  const [isAdmin, setAdmin] = useState(false);
-
   return (
     <div>
-      <Header
-        setSignin={setSignin}
-        setAdmin={setAdmin}
-        isAdmin={isAdmin}
-        isSignIn={isSignIn}
-      />
+      <Header />
       <Hero />
       <Cards />
       <RecentWorkshops />
       <Guide />
+      <ChatBot />
 
       <Footer />
     </div>

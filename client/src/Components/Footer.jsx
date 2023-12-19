@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer class=" dark:bg-gray-900" style={{ backgroundColor: "#F7F1EE " }}>
+    <footer class=" dark:bg-gray-900" style={{ backgroundColor: "#ccbfd3 " }}>
       <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-between">
           <div class="mb-6 md:mb-0 flex flex-col  ">

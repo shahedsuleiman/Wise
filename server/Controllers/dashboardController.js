@@ -126,7 +126,7 @@ const allcourses = async (req, res, next) => {
     // }
 
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const pageSize = parseInt(req.query.pageSize) || 5;
     const searchTerm = req.query.search || "";
     const categoryFilter = req.query.category || "";
     const isPaidFilter =
@@ -157,7 +157,7 @@ const allworkshops = async (req, res, next) => {
     // }
 
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const pageSize = parseInt(req.query.pageSize) || 5;
     const searchTerm = req.query.search || "";
     const categoryFilter = req.query.category || "";
     const isPaidFilter =
@@ -287,16 +287,11 @@ const createlesson = async (req, res) => {
       }
 
       const courseID = req.params.id;
-      const { title, description } = req.body;
+      const { title } = req.body;
       const videoBuffer = req.file ? req.file.buffer : null;
 
       const videoUrl = await uploadVideoToFirebase(videoBuffer);
-      const result = await Dashboard.createlesson(
-        courseID,
-        videoUrl,
-        title,
-        description
-      );
+      const result = await Dashboard.createlesson(courseID, videoUrl, title);
 
       if (result) {
         return res.status(201).json({
@@ -358,24 +353,20 @@ const uploadlessonimage = async (req, res) => {
 
 const alllessons = async (req, res, next) => {
   try {
-    const { role } = req.user;
+    // const { role } = req.user;
 
-    if (role !== "admin") {
-      return res.status(403).json({
-        success: false,
-        message: "Access denied. Only admin are allowed.",
-      });
-    }
+    // if (role !== "admin") {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Access denied. Only admin are allowed.",
+    //   });
+    // }
 
     const courseID = req.params.id;
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
-    const lessons = await Dashboard.alllessons(courseID, page, pageSize);
-    const totalCount = await Dashboard.countlessons(courseID);
-    const totalPages = Math.ceil(totalCount / pageSize);
-    console.log(totalCount, totalPages);
 
-    res.status(200).json({ lessons, totalCount, totalPages });
+    const lessons = await Dashboard.alllessons(courseID);
+
+    res.status(200).json({ lessons });
   } catch (err) {
     console.error(err);
     res.status(400).json({ success: false, error: "Error in getting lessons" });
@@ -511,7 +502,7 @@ const allquestions = async (req, res, next) => {
     //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
     // }
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const pageSize = parseInt(req.query.pageSize) || 5;
     const question = await Dashboard.allquestions(page, pageSize);
 
     const totalCount = await Dashboard.countfaq();
@@ -639,55 +630,6 @@ const login = async (req, res) => {
   }
 };
 
-const sendmessagetouser = async (req, res) => {
-  try {
-    // const {role } = req.user;
-
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
-    const senderID = await Dashboard.getadmins();
-    const reciverID = req.params.id;
-    const { message } = req.body;
-
-    for (const sendersID of senderID) {
-      await Dashboard.sendmessagetouser(sendersID, reciverID, message);
-    }
-    res
-      .status(201)
-      .json({ success: true, message: "message sent successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ success: false, error: "message sent failed" });
-  }
-};
-
-const chatbox = async (req, res) => {
-  try {
-    // const {role } = req.user;
-
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
-
-    const senderID = req.user.userId;
-    const reciverID = req.params.id;
-
-    const reciver = req.user.userId;
-    const sender = req.params.id;
-
-    const receivedMessages = await Dashboard.getrecivedmessages(
-      sender,
-      reciver
-    );
-    const sentMessages = await Dashboard.getsentmessages(senderID, reciverID);
-    res.status(200).json({ success: true, receivedMessages, sentMessages });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
-};
-
 const allusers = async (req, res) => {
   try {
     // const {role} = req.user;
@@ -695,15 +637,17 @@ const allusers = async (req, res) => {
     //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
     // }
 
-    // const page = parseInt(req.query.page) || 1;
-    // const pageSize = parseInt(req.query.pageSize) || 10;
-    const searchTerm = req.query.search || "";
-    const roleFilter = req.query.role || "";
-    const users = await Dashboard.allusers(searchTerm, roleFilter);
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 5;
+
+    // const roleFilter = req.query.role || "";
+    const users = await Dashboard.allusers(page, pageSize);
     const totalCount = await Dashboard.countusers();
-    //const totalPages = Math.ceil(totalCount / pageSize);
-    //console.log(totalCount, totalPages);
-    return res.status(200).json({ succes: true, users, totalCount });
+    const totalPages = Math.ceil(totalCount / pageSize);
+    console.log(totalCount, totalPages);
+    return res
+      .status(200)
+      .json({ succes: true, users, totalCount, totalPages });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -1002,8 +946,6 @@ module.exports = {
   updateanswer,
   deleteanswer,
   login,
-  sendmessagetouser,
-  chatbox,
   allusers,
   countusers,
   countcourses,
@@ -1024,4 +966,5 @@ module.exports = {
   countvideoviewers,
   counttechtips,
   countfaq,
+  uploadlessonimage,
 };

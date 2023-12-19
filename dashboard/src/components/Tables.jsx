@@ -4,6 +4,7 @@ import Users from "./Users";
 import CoursesTable from "./CoursesTable";
 import Workshops from "./Workshops";
 import Techtips from "./Techtips";
+import Faq from "./Faq";
 
 function Tables() {
   return (
@@ -13,6 +14,7 @@ function Tables() {
       <CoursesTable />
       <Workshops />
       <Techtips />
+      <Faq />
     </>
   );
 }

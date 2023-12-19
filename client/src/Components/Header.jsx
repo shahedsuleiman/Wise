@@ -14,7 +14,7 @@ function Header() {
   };
   return (
     <>
-      <nav class=" relative bg-white  z-20 h-18 border-gray-200 py-2.5 dark:bg-gray-900  w-full ">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 py-2.5 dark:bg-gray-900 w-full">
         <div class="flex  justify-between  px-4 mx-auto">
           <a href="/" class="flex items-center">
             <img src={logo2} class="h-14 w-48  " alt="WiseAssist Logo" />

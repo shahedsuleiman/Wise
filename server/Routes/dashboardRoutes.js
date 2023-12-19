@@ -25,11 +25,6 @@ router.get("/dashboard/allqeustions", dashboardController.allquestions);
 router.put("/dashboard/question/:id/addanswer", dashboardController.addanswer);
 router.put("/dashboard/answer/:id/update", dashboardController.updateanswer);
 router.put("/dashboard/answer/:id/delete", dashboardController.deleteanswer);
-router.get("/dashboard/chatbox/:id", dashboardController.chatbox);
-router.post(
-  "/dashboard/sendmessage/:id",
-  dashboardController.sendmessagetouser
-);
 router.post("/dashboard/login", dashboardController.login);
 router.get("/dashboard/users/count", dashboardController.countusers);
 router.get("/dashboard/courses/count", dashboardController.countcourses);

@@ -8,20 +8,27 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3);
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1); // Current page
+  const [limit, setLimit] = useState(5); // Users per page
 
   useEffect(() => {
+    fetchUsers(); // Fetch users when component mounts or when page or limit changes
+  }, [page, limit]);
+
+  const fetchUsers = () => {
     axios
-      .get("http://localhost:8080/dashboard/allusers")
+      .get(
+        `http://localhost:8080/dashboard/allusers?page=${page}&limit=${limit}`
+      )
       .then((response) => {
         setUsers(response.data.users);
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
-  }, []);
+  };
+
   console.log(users);
   const updateUser = (updatedUserData) => {
     const updatedUsers = users.map((u) =>
@@ -79,30 +86,6 @@ function Users() {
     setSelectedUser(null);
     setShowModal(false);
   };
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredUsers
-    .filter((user) => !user.is_delete)
-    .slice(indexOfFirstItem, indexOfLastItem);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(users.length / itemsPerPage); i++) {
-    pageNumbers.push(i);
-  }
-
-  const maxVisibleButtons = 3;
-  const indexOfLastButton = Math.min(
-    Math.max(currentPage + maxVisibleButtons - 1, maxVisibleButtons),
-    pageNumbers.length
-  );
-  const indexOfFirstButton = Math.max(indexOfLastButton - maxVisibleButtons, 0);
-
-  const visiblePageNumbers = pageNumbers.slice(
-    indexOfFirstButton,
-    indexOfLastButton
-  );
 
   return (
     <div class="flex flex-col">
@@ -189,7 +172,7 @@ function Users() {
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                  {currentItems.map((user, index) => (
+                  {filteredUsers.map((user, index) => (
                     <tr
                       key={index}
                       className={index % 2 !== 0 ? "bg-white" : "bg-[#F7F1EE]"}
@@ -219,7 +202,7 @@ function Users() {
                             toggleBlockUser(user.id, user.is_deleted)
                           }
                           className={`justify-center inline-flex w-20 bg-indigo-950 items-center text-sm font-semibold rounded-lg border border-transparent text-white ${
-                            user.is_deleted ? "bg-red-500" : "bg-indigo-950"
+                            user.is_deleted ? "bg-red-800" : "bg-indigo-950"
                           } disabled:opacity-50 disabled:pointer-events-none`}
                         >
                           {user.is_deleted ? "Unblock" : "Block"}
@@ -239,42 +222,44 @@ function Users() {
             </div>
             <div class="py-1 px-4">
               <nav class="flex items-center space-x-1">
-                {currentPage > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => paginate(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                  >
-                    <span aria-hidden="true">«</span>
-                    <span className="sr-only">Previous</span>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                  disabled={page <= 1}
+                  className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                >
+                  <span aria-hidden="true">«</span>
+                  <span className="sr-only">Previous</span>
+                </button>
 
-                {users.length > 0 &&
-                  visiblePageNumbers.map((number) => (
-                    <div key={number} className="min-w-[40px]">
+                <div className="flex items-center space-x-2">
+                  {Array.from(
+                    { length: Math.ceil(users.length / limit) },
+                    (_, index) => (
                       <button
-                        type="button"
-                        onClick={() => paginate(number)}
-                        className="flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10"
+                        key={index}
+                        onClick={() => setPage(index + 1)}
+                        className={`p-2.5 inline-flex items-center rounded-full text-sm font-medium ${
+                          page === index + 1
+                            ? " text-indigo-950"
+                            : "text-gray-800 hover:bg-gray-100 dark:text-white dark:hover:bg-white/10"
+                        }`}
                       >
-                        {number}
+                        {index + 1}
                       </button>
-                    </div>
-                  ))}
+                    )
+                  )}
+                </div>
 
-                {indexOfLastItem < users.length && (
-                  <button
-                    type="button"
-                    onClick={() => paginate(currentPage + 1)}
-                    disabled={indexOfLastItem >= users.length}
-                    className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                  >
-                    <span className="sr-only">Next</span>
-                    <span aria-hidden="true">»</span>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setPage(page + 1)}
+                  disabled={users.length < limit}
+                  className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                >
+                  <span className="sr-only">Next</span>
+                  <span aria-hidden="true">»</span>
+                </button>
               </nav>
             </div>
           </div>
