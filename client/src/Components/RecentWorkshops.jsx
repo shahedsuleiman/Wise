@@ -1,10 +1,71 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function RecentWorkshops() {
   const [workshops, setWorkshops] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const CustomPrevArrow = ({ onClick }) => (
+    <button
+      className="absolute top-12 left-10 rounded-full border border-indigo-950 p-3 text-indigo-950 transform -translate-y-1/2 transition hover:bg-indigo-950 hover:text-white z-10"
+      onClick={() => {
+        console.log("Prev button clicked");
+        onClick();
+      }}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth="1.5"
+        stroke="currentColor"
+        className="h-5 w-5 rtl:rotate-180"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M15.75 19.5L8.25 12l7.5-7.5"
+        />
+      </svg>
+    </button>
+  );
+  const CustomNextArrow = ({ onClick }) => (
+    <button
+      className="absolute ml-4 top-12 left-20 rounded-full border border-indigo-950 p-3 text-indigo-950 transform -translate-y-1/2 transition hover:bg-indigo-950 hover:text-white z-10"
+      onClick={onClick}
+    >
+      <svg
+        className="h-5 w-5 rtl:rotate-180"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9 5l7 7-7 7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+        />
+      </svg>
+    </button>
+  );
+
+  const settings = {
+    // dots: true,
+    infinite: true,
+    speed: 2500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    // autoplay: true,
+    // autoplaySpeed: 5000,
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
+  };
 
   useEffect(() => {
     axios
@@ -22,137 +83,48 @@ function RecentWorkshops() {
       });
   }, []);
 
-  const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? workshops.length - 1 : prev - 1));
-  };
-
-  const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev === workshops.length - 1 ? 0 : prev + 1));
-  };
   return (
     <>
-      <div className="page-event  dark:bg-gray-900">
-        <div className="container mx-auto py-10">
-          <div className="upcoming-sec text-indigo-950 border-b border-gray-500 pb-5">
-            <div className="heading text-2xl">Upcoming Workshops</div>
-          </div>
-          <div className="upcoming-event-list text-gray-500 relative">
+      <section>
+        <Slider {...settings}>
+          {workshops.map((workshop, index) => (
             <div
-              className="carousel  relative"
-              style={{
-                backgroundColor: "#F7F1EE",
-                height: "405px",
-                position: "relative",
-                overflowY: "hidden",
-              }}
+              key={index}
+              className="mx-auto max-w-screen-2xl px-4 py-10 sm:px-6 lg:px-8"
             >
-              {workshops.map((workshop, index) => (
-                <div
-                  key={index}
-                  className={`event-block py-5 border-b border-gray-500 ${
-                    index === currentSlide ? "active-slide" : "hidden-slide"
-                  }`}
-                  style={{ height: "100%" }}
-                >
-                  <div className="flex flex-wrap items-center">
-                    <div className="lg:w-1/6 text-center">
-                      <div className="text-2xl font-bold">Jan</div>
-                      <div className="text-2xl font-bold">27</div>
-                    </div>
-                    <div className="lg:w-2/6 lg:pl-5">
-                      <img
-                        src={workshop.image}
-                        alt="Event"
-                        className="w-full"
-                      />
-                    </div>
-                    <div className="lg:w-3/6 lg:pl-5">
-                      <div className="title text-2xl py-3">
-                        {workshop.title}
-                      </div>
-                      <div className="venue text-sm">
-                        <div>
-                          <i className="fa fa-map-marker"></i>{" "}
-                          {workshop.category}
-                        </div>
-                        <div className="dim-color">
-                          <a
-                            href="https://www.google.co.in"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Get Directions
-                          </a>
-                        </div>
-                      </div>
-                      <div className="time text-sm py-3">
-                        <div>
-                          <i className="fa fa-clock-o"></i>{" "}
-                          {workshop.start_time} - {workshop.end_time}
-                        </div>
-                        <div
-                          data-livestamp="1517054400"
-                          className="dim-color"
-                        ></div>
-                      </div>
-                      <div className="sort-story overflow-hidden">
-                        {workshop.description}
-                      </div>
-                      <div className="group-of-btn py-3">
-                        <Link to={`/workshopsDetail/${workshop.id}`}>
-                          <button className="btn book-ticket bg-indigo-900 hover:bg-indigo-950 text-white px-4 py-2 rounded">
-                            See Details
-                          </button>
-                        </Link>
-                      </div>
-                    </div>
+              <div className="grid grid-cols-1 lg:h-screen lg:grid-cols-2">
+                <div className="relative z-10 lg:py-16">
+                  <div className="relative h-64 sm:h-80 lg:h-full">
+                    <img
+                      alt={workshop.title}
+                      src={workshop.image}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
                   </div>
                 </div>
-              ))}
+
+                <div className="relative flex items-center bg-[#d5c5df]">
+                  <span className="hidden lg:absolute lg:inset-y-0 lg:-start-16 lg:block lg:w-16 lg:bg-[#d5c5df]"></span>
+
+                  <div className="p-8 sm:p-16 lg:p-24">
+                    <h2 className="text-2xl font-bold sm:text-3xl">
+                      {workshop.title}
+                    </h2>
+                    <p className="mt-4 text-gray-600">{workshop.description}</p>
+
+                    <Link
+                      to={`/workshopsDetail/${workshop.id}`}
+                      className="mt-8 inline-block rounded border border-indigo-950 bg-indigo-950 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-950 focus:outline-none focus:ring active:text-indigo-950"
+                    >
+                      Learn More
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="absolute inset-y-0 flex items-center justify-between w-full px-4">
-              <button
-                onClick={handlePrevSlide}
-                className=" text-indigo-950 px-4 py-2 rounded"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`h-6 w-6 text-indigo-950`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={handleNextSlide}
-                className="text-indigo-950 px-4 py-2 rounded"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`h-6 w-6 text-indigo-950`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+          ))}
+        </Slider>
+      </section>
     </>
   );
 }

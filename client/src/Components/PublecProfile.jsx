@@ -111,7 +111,7 @@ function PublecProfile() {
 
   return (
     <>
-      <main className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
+      <main className="w-full min-h-screen md:w-2/3 lg:w-3/4">
         <div className="p-2 md:p-4">
           <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
             <h2 className="pl-6 text-2xl font-bold sm:text-xl">
@@ -119,13 +119,7 @@ function PublecProfile() {
             </h2>
             <div className="grid max-w-2xl mx-auto mt-8">
               <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
-                <img
-                  src={userInfo.image}
-                  alt="profile_image "
-                  className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
-                />
-
-                <div className="flex flex-col space-y-5 sm:ml-8">
+                <div className="flex flex-row relative space-y-5 sm:ml-8">
                   <input
                     type="file"
                     id="avatar"
@@ -134,16 +128,24 @@ function PublecProfile() {
                     onChange={handleFileChange}
                     ref={(input) => setFileInputRef(input)}
                   />
-                  <label htmlFor="avatar" className="cursor-pointer">
-                    <button
-                      className="py-3.5 px-7 text-base font-medium text-indigo-100 bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200 inline-block"
+                  <label
+                    htmlFor="avatar"
+                    className="cursor-pointer group relative"
+                  >
+                    <img
+                      src={userInfo.image}
+                      alt="profile_image"
+                      className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500 cursor-pointer hover:ring-4 hover:ring-indigo-400"
                       onClick={() => fileInputRef.click()}
-                    >
-                      Change picture
-                    </button>
+                    />
+                    <span className="hidden group-hover:flex absolute text-indigo-100 bg-[#202142] bg-opacity-60 rounded-full inset-0 items-center justify-center font-bold">
+                      Upload Image
+                    </span>
                   </label>
+
                   <button
-                    className="py-3.5 px-7 text-base font-medium text-indigo-100 bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200 inline-block"
+                    style={{ height: "40px", width: "200px" }}
+                    className=" absolute px-7 top-12 left-48 text-base font-medium text-indigo-100 bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200 inline-block"
                     onClick={handleUpload}
                   >
                     Save Picture

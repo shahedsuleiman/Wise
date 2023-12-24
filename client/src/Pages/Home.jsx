@@ -9,6 +9,7 @@ import Guide from "../Components/Guide";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import ChatBot from "../Components/ChatBot";
+import Testimonials from "../Components/Testimonials";
 
 function Home() {
   return (
@@ -18,6 +19,7 @@ function Home() {
       <Cards />
       <RecentWorkshops />
       <Guide />
+      <Testimonials />
       <ChatBot />
 
       <Footer />

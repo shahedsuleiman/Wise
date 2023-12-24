@@ -124,26 +124,29 @@ const regincourse = async (req, res) => {
 
     const courseDetails = await Course.detail(courseID);
 
-    if (!courseDetails || courseDetails.length === 0) {
-      throw new Error("Course not found");
-    }
-
     const is_paid = courseDetails[0].is_paid;
-
-    if (is_paid === true) {
+    let seats = courseDetails[0].seats;
+    if (seats == 0) {
+      throw new Error(
+        "enroll is not available due to the limited number of seats having expired"
+      );
+    }
+    if (is_paid === "Paid") {
       const userID = req.user.userId;
       await Profile.reginpaidcourse(userID, courseID);
       res.status(201).json({
         success: true,
         message: "Paid course registered successfully",
       });
-    } else if (is_paid === false) {
+      seats -= 1;
+    } else if (is_paid === "Free") {
       const userID = req.user.userId;
       await Profile.reginfreecourse(userID, courseID);
       res.status(201).json({
         success: true,
         message: "Free course registered successfully",
       });
+      seats -= 1;
     } else {
       throw new Error("Invalid value for is_paid parameter");
     }

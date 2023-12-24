@@ -4,22 +4,23 @@ import { useCookies } from "react-cookie";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CardSection from "./CardSection";
+import { useNavigate } from "react-router-dom";
 
 const stripePromise = loadStripe(
-"pk_test_51O6ir2JHXfBpbbMkPbKEGUGpcDt2kKbOavmI201QuITZ8F3Y48KGAOPE3hvYfSuJcIdhDa8gk7KvAW2FeiwBDPF5004smsWbGA"
+  "pk_test_51O6ir2JHXfBpbbMkPbKEGUGpcDt2kKbOavmI201QuITZ8F3Y48KGAOPE3hvYfSuJcIdhDa8gk7KvAW2FeiwBDPF5004smsWbGA"
 );
 
 const CheckoutForm = () => {
   const [cookies] = useCookies(["token"]);
-
+  const navigate = useNavigate();
   const handlePremiumCheckout = async () => {
+    // console.log("Redirecting to /success");
+    // navigate("/success");
     const token = cookies.Token;
 
     try {
       axios.defaults.headers.common["Authorization"] = token;
-      const response = await axios.post(
-        "http://localhost:8080/subscribtion"
-      );
+      const response = await axios.post("http://localhost:8080/subscribtion");
 
       const sessionId = response.data.id;
 
@@ -28,7 +29,12 @@ const CheckoutForm = () => {
       const { error } = await stripe.redirectToCheckout({
         sessionId: sessionId,
       });
-
+      if (error) {
+        console.error("Error redirecting to checkout:", error);
+      } else {
+        console.log("Redirecting to /success");
+        navigate("/success");
+      }
       console.log("Response from backend:", response.data);
     } catch (error) {
       console.error("Error sending data:", error);

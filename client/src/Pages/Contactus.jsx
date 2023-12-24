@@ -66,7 +66,7 @@ function Contactus() {
     <>
       <Header />
       <div
-        className="w-full  dark:bg-gray-500 py-10"
+        className="w-full  dark:bg-gray-500 py-10 "
         style={{
           width: "100%",
           backgroundImage: `url(${contact})`,
@@ -81,7 +81,7 @@ function Contactus() {
           <div className="bg-gradient-to-b from-indigo-950 via-transparent to-transparent h-[45rem]"></div>
         </div>
         <div className="container py-24 h-[20rem] sm:h-[22rem]  flex flex-col sm:flex-col md:flex-col  flex-wrap content-center justify-center ">
-          <h1 className=" z-10 text-5xl py-5 antialiased font-semibold leadi text-center">
+          <h1 className=" z-10 text-5xl py-5 antialiased font-semibold leadi text-center text-white">
             How May We Help You?
           </h1>
 

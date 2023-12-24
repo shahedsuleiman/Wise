@@ -14,5 +14,5 @@ router.post(
   middleware.authorize,
   userController.createCheckoutSession
 );
-
+router.get("/updaterole", middleware.authorize, userController.updateuserrole);
 module.exports = router;

@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-// import { storage } from "firebase";
-// import firebase from "firebase/app";
-// import "firebase/storage";
 
 function CreateCourse({ addcourse, closeModal, addedCourse }) {
   const [createCourse, setCreatedCourse] = useState(
@@ -43,15 +40,14 @@ function CreateCourse({ addcourse, closeModal, addedCourse }) {
       form.append("site", createCourse.site);
       form.append("start_time", createCourse.start_time);
       form.append("end_time", createCourse.end_time);
-      form.append("image", createCourse.image); // Append the image as a file
+      form.append("image", createCourse.image);
 
-      // Make the API call
       const response = await axios.post(
         "http://localhost:8080/dashboard/createcourse",
         form,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -108,16 +104,6 @@ function CreateCourse({ addcourse, closeModal, addedCourse }) {
               className="border rounded-md px-2 py-1 mb-2 w-full"
             />
           </div>
-          {/* <div className="flex flex-col gap-y-2">
-          <label className="font-bold">category</label>
-          <input
-            type="number"
-            name="category_id"
-            value={createCourse.category_id}
-            onChange={handleInputChange}
-            className="border rounded-md px-2 py-1 mb-2 w-full"
-          />
-        </div> */}
 
           <div className="flex flex-col gap-y-2">
             <label className="font-bold">Category</label>

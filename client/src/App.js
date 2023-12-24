@@ -22,6 +22,9 @@ import Profile from "./Pages/Profile";
 import EmailForgot from "./Pages/EmailForgot";
 import VerifyCode from "./Pages/VerifyCode";
 import ResetPass from "./Pages/ResetPass";
+import CoursesOnsite from "./Pages/CoursesOnsite";
+import Success from "./Pages/Success";
+import PremiumSubscribe from "./Components/CheckoutForm";
 function App() {
   return (
     <div className="App">
@@ -56,10 +59,16 @@ function App() {
             <Route path="/about" element={<AboutUs />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courseDetails/:id" element={<Coursesdetails />} />
+            <Route
+              path="/onsiteCourseDetails/:id"
+              element={<CoursesOnsite />}
+            />
             <Route path="/workshopsDetail/:id" element={<WorkshopDetails />} />
             <Route path="/emailForgot" element={<EmailForgot />} />
             <Route path="/verify-code" element={<VerifyCode />} />
             <Route path="/reset-password" element={<ResetPass />} />
+            <Route path="/premium-subscribe" element={<PremiumSubscribe />} />
+            <Route path="/successs" element={<Success />} />
           </Routes>
         </BrowserRouter>
       </header>

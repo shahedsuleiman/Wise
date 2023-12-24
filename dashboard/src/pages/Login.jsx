@@ -37,15 +37,19 @@ const Login = () => {
         navigate("/home");
       } else {
         console.error("Token not found in response");
+        alert("Login failed. Please try again.");
       }
-
-      // Handle successful login
     } catch (error) {
       console.error("Error logging in", error);
-      // Handle login error
-      alert("Password or Email wrong");
+
+      if (error.response && error.response.status === 401) {
+        alert("Invalid credentials. Please check your email and password.");
+      } else {
+        alert("An error occurred while logging in. Please try again later.");
+      }
     }
   };
+
   return (
     <>
       <div class="font-[sans-serif] text-indigo-950">

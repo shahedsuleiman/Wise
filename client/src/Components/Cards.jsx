@@ -24,13 +24,13 @@ function Cards() {
   return (
     <>
       {" "}
-      <div class="  my-6 lg:my-12 container px-6 mx-auto flex flex-col md:flex-row items-start md:items-center justify-between pb-4 border-b border-gray-300">
+      <div className="mt-8 my-8 lg:my-8 container px-6 mx-auto flex flex-col md:flex-row items-start md:items-center justify-between pb-4 border-b border-gray-300">
         <div>
-          <h3 class="text-2xl font-bold leading-tight text-gray-800 dark:text-gray-100">
+          <h3 className="text-2xl font-bold leading-tight text-gray-800 dark:text-gray-100">
             Check our Latest Courses
           </h3>
         </div>
-        <div class="mt-6 md:mt-0">
+        <div className="mt-6 md:mt-0">
           <button
             href=""
             className="linear rounded-[20px] bg-indigo-950 px-4 py-2 text-base font-medium text-white transition duration-200 hover:bg-indigo-900 active:bg-brand-700"
@@ -39,71 +39,56 @@ function Cards() {
           </button>
         </div>
       </div>
-      <div className="flex flex-row flex-wrap justify-center gap-10  items-stretch ">
-        {/* {Array.isArray(courseData) && courseData.length > 0 ? ( */}
-        {courseData && courseData.courses ? (
-          courseData.courses.map((course) => (
-            <div
-              key={course.id}
-              className="!z-5 relative flex flex-col rounded-[20px] max-w-[300px] border border-solid border-gray-300 bg-white bg-clip-border shadow-3xl shadow-shadow-500 w-full !p-4 3xl:p-![18px] undefined"
-            >
-              <div className="h-full w-full">
-                <div className="relative w-full h-52">
+      <div className="bg-white flex justify-center items-center py-6">
+        <div className="md:px-4 md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 space-y-4 md:space-y-0">
+          {courseData && courseData.courses ? (
+            courseData.courses.map((course) => (
+              <div
+                key={course.id}
+                className="max-w-xs max-h-full bg-white px-4 pt-4 pb-2 rounded-lg border border-gray-300 shadow-lg transform hover:scale-105 transition duration-500 flex flex-col"
+              >
+                <div className="relative flex-shrink-0">
                   <img
-                    src={course.image}
-                    className="mb-3 h-full w-full rounded-xl 3xl:h-full 3xl:w-full"
-                    alt=""
+                    className="w-full h-48 rounded-xl object-cover mb-4"
+                    src={course.image} // Assuming you have an 'image' property in your course data
+                    alt={course.title} // Assuming you have a 'title' property in your course data
                   />
-                  <button className="absolute top-3 right-3 flex items-center justify-center rounded-full bg-white p-2 text-brand-500 hover:cursor-pointer">
-                    <div className="flex h-full w-full items-center justify-center rounded-full text-xl hover:bg-gray-50">
+                </div>
+                <h1 className="text-gray-800 text-2xl font-bold cursor-pointer">
+                  {course.title}
+                </h1>
+                <div className="my-4">
+                  <div className="flex space-x-1 items-center">
+                    <span>
                       <svg
-                        stroke="currentColor"
-                        fill="currentColor"
-                        strokeWidth="0"
-                        viewBox="0 0 512 512"
-                        height="1em"
-                        width="1em"
                         xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-indigo-950 mb-1.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
                         <path
-                          fill="none"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth="32"
-                          d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0018 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81z"
-                        ></path>
+                          strokeWidth="2"
+                          d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
-                    </div>
-                  </button>
-                </div>
-                <div className="mb-3 flex items-center justify-between px-1 md:items-start">
-                  <div className="mb-2">
-                    <p className="text-lg font-bold text-navy-700">
-                      {course.title}
-                    </p>
-                    <p className="mt-1 text-sm font-medium text-gray-600 md:mt-2">
-                      By {course.trainer}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between md:items-center lg:justify-between ">
-                  <div className="flex">
-                    <p className="!mb-0 text-sm font-bold text-brand-500">
-                      {course.start_time} - {course.end_time}
-                    </p>
+                    </span>
+                    <p>By {course.trainer}</p>
                   </div>
                   <Link to={`/courseDetails/${course.id}`}>
-                    <button className="linear rounded-lg bg-indigo-950 px-4 py-2 text-base font-medium text-white transition duration-200 hover:bg-indigo-900 active:bg-brand-700">
-                      View Course
+                    <button className="mt-4 text-xl w-full text-white bg-indigo-950 py-2 rounded-xl shadow-lg">
+                      Buy Lesson
                     </button>
                   </Link>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p>Loading...</p> // Or any other message while data is being fetched
-        )}
+            ))
+          ) : (
+            <p>Loading...</p> // Or any other message while data is being fetched
+          )}
+        </div>
       </div>
     </>
   );

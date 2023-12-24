@@ -7,6 +7,7 @@ import background from "../assets/background.png";
 import FormHeader from "../Components/FormHeader";
 import Header from "../Components/Header";
 import { useAuth } from "../Context/AuthContext";
+import SignUpWithGoogle from "../Components/SignUpWithGoogle";
 
 const LoginPage = () => {
   const { isLoggedIn, login, logout } = useAuth();
@@ -14,6 +15,7 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +46,9 @@ const LoginPage = () => {
     } catch (error) {
       console.error("Error logging in", error);
 
-      alert("Password or Email wrong");
+      if (error.response && error.response.data && error.response.data.errors) {
+        setError(error.response.data.errors);
+      }
     }
   };
 
@@ -58,7 +62,7 @@ const LoginPage = () => {
           backgroundSize: "cover",
         }}
       >
-        <div className="max-w-md w-full space-y-8">
+        <div className="max-w-md mt-20  w-full space-y-8">
           <section className="bg-gray-50 dark:bg-gray-900">
             <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
               <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -87,11 +91,13 @@ const LoginPage = () => {
                         placeholder="name@gmail.com"
                         required=""
                       />
-                      {/* {errors.email && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.email}
-                        </p>
-                      )} */}
+                      {error !== null && error.includes("email") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-sm">
+                            Invalid Email, Please try again.
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label
@@ -110,11 +116,13 @@ const LoginPage = () => {
                         class="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-900 focus:border-indigo-900 focus:z-10 sm:text-sm"
                         required=""
                       />
-                      {/* {errors.password && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.password}
-                        </p>
-                      )} */}
+                      {error !== null && error.includes("password") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-sm">
+                            Invalid Password, Please try again.
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div class="flex items-center justify-between">
                       <div class="flex items-start">
@@ -136,6 +144,7 @@ const LoginPage = () => {
                       </span>
                     </button>
                   </form>
+                  <SignUpWithGoogle />
                 </div>
               </div>
             </div>

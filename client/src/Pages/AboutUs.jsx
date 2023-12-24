@@ -21,7 +21,7 @@ function AboutUs() {
         isSignIn={isSignIn}
       />
       <section
-        class="flex items-center xl:h-screen font-poppins dark:bg-gray-800 "
+        class="flex items-center mt-10 xl:h-screen font-poppins dark:bg-gray-800 "
         style={{ backgroundColor: "#F7F1EE " }}
       >
         <div class="justify-center flex-1 max-w-6xl py-4 mx-auto lg:py-6 md:px-6">

@@ -12,11 +12,14 @@ const moment = require("moment");
 
 const createcourse = async (req, res) => {
   try {
-    // const {  role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     upload(req, res, async function (err) {
       if (err) {
@@ -33,22 +36,28 @@ const createcourse = async (req, res) => {
         category_id,
         is_paid,
         site,
+        seats,
       } = req.body;
       const imageBuffer = req.file ? req.file.buffer : null;
 
       const imageUrl = await uploadImageToFirebase(imageBuffer);
-      await addToGoogleCalendar(title, start_time, end_time, description);
+
+      if (start_time !== "" && end_time !== "") {
+        await addToGoogleCalendar(title, start_time, end_time, description);
+      }
+
       await Dashboard.createcourse(
         title,
         detail,
         description,
         trainer,
-        start_time,
-        end_time,
+        start_time !== "" ? start_time : null,
+        end_time !== "" ? end_time : null,
         category_id,
         imageUrl,
         is_paid,
-        site
+        site,
+        seats
       );
 
       res
@@ -119,11 +128,14 @@ const uploadImageToFirebase = async (imageBuffer) => {
 
 const allcourses = async (req, res, next) => {
   try {
-    // const { role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin users are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin users are allowed.",
+      });
+    }
 
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 5;
@@ -150,11 +162,14 @@ const allcourses = async (req, res, next) => {
 
 const allworkshops = async (req, res, next) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin users are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin users are allowed.",
+      });
+    }
 
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 5;
@@ -184,11 +199,14 @@ const allworkshops = async (req, res, next) => {
 };
 
 const coursedetail = async (req, res) => {
-  // const {  role } = req.user;
+  const { role } = req.user;
 
-  // if (role !== 'admin') {
-  //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-  // }
+  if (role !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied. Only admin are allowed.",
+    });
+  }
 
   try {
     const courseId = req.params.id;
@@ -202,10 +220,13 @@ const coursedetail = async (req, res) => {
 
 const updatecourse = async (req, res) => {
   try {
-    // const { role } = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const { title, detail, description, trainer, start_time, end_time, site } =
       req.body;
@@ -237,11 +258,14 @@ const updatecourse = async (req, res) => {
 
 const deletecourse = async (req, res, next) => {
   try {
-    // const {  role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const courseID = req.params.id;
     await Dashboard.deletecourse(courseID);
@@ -256,11 +280,14 @@ const deletecourse = async (req, res, next) => {
 
 const deleteuser = async (req, res) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin users are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin users are allowed.",
+      });
+    }
 
     const userID = req.params.id;
 
@@ -275,11 +302,14 @@ const deleteuser = async (req, res) => {
 
 const createlesson = async (req, res) => {
   try {
-    // const {  role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin users are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin users are allowed.",
+      });
+    }
 
     videoupload(req, res, async function (err) {
       if (err) {
@@ -325,11 +355,14 @@ const uploadVideoToFirebase = async (videoBuffer) => {
 
 const uploadlessonimage = async (req, res) => {
   try {
-    // const {  role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     upload(req, res, async function (err) {
       if (err) {
@@ -353,14 +386,14 @@ const uploadlessonimage = async (req, res) => {
 
 const alllessons = async (req, res, next) => {
   try {
-    // const { role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== "admin") {
-    //   return res.status(403).json({
-    //     success: false,
-    //     message: "Access denied. Only admin are allowed.",
-    //   });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const courseID = req.params.id;
 
@@ -374,11 +407,14 @@ const alllessons = async (req, res, next) => {
 };
 
 const lessonpage = async (req, res) => {
-  // const {role } = req.user;
+  const { role } = req.user;
 
-  // if (role !== 'admin') {
-  //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-  // }
+  if (role !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied. Only admin are allowed.",
+    });
+  }
   const lessonID = req.params.id;
   try {
     const course = await Dashboard.lessonpage(lessonID);
@@ -388,14 +424,37 @@ const lessonpage = async (req, res) => {
     res.status(500).json({ success: false, error: "Error in getting lesson" });
   }
 };
+const deletelesson = async (req, res, next) => {
+  try {
+    const { role } = req.user;
 
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
+
+    const lessonID = req.params.id;
+    await Dashboard.deletelesson(lessonID);
+    res
+      .status(200)
+      .json({ success: true, message: "Course deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ success: false, error: "Course deleted failed" });
+  }
+};
 const createtichtip = async (req, res, next) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     upload(req, res, async function (err) {
       if (err) {
         return res.status(400).json({ success: false, error: err.message });
@@ -420,14 +479,17 @@ const createtichtip = async (req, res, next) => {
 
 const alltechtips = async (req, res, next) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const pageSize = parseInt(req.query.pageSize) || 5;
     const course = await Dashboard.alltechtips(page, pageSize);
     const totalCount = await Dashboard.counttechtips();
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -443,11 +505,14 @@ const alltechtips = async (req, res, next) => {
 };
 
 const techtipdetail = async (req, res) => {
-  // const {role } = req.user;
+  const { role } = req.user;
 
-  // if (role !== 'admin') {
-  //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-  // }
+  if (role !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Access denied. Only admin are allowed.",
+    });
+  }
   const techId = req.params.id;
   try {
     const course = await Dashboard.techtipdetail(techId);
@@ -460,11 +525,14 @@ const techtipdetail = async (req, res) => {
 
 const updatetechtip = async (req, res) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const { title, short_detail, detail } = req.body;
     const techId = req.params.id;
     await Dashboard.updatetechtip(techId, title, short_detail, detail);
@@ -478,11 +546,14 @@ const updatetechtip = async (req, res) => {
 
 const deletetechtip = async (req, res, next) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const techId = req.params.id;
     await Dashboard.deletetechtip(techId);
     res
@@ -496,11 +567,14 @@ const deletetechtip = async (req, res, next) => {
 
 const allquestions = async (req, res, next) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 5;
     const question = await Dashboard.allquestions(page, pageSize);
@@ -520,11 +594,14 @@ const allquestions = async (req, res, next) => {
 
 const addanswer = async (req, res) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const questionID = req.params.id;
     const { answer } = req.body;
@@ -550,11 +627,14 @@ const addanswer = async (req, res) => {
 
 const updateanswer = async (req, res) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const answerID = req.params.id;
     const { answer } = req.body;
@@ -580,11 +660,14 @@ const updateanswer = async (req, res) => {
 
 const deleteanswer = async (req, res) => {
   try {
-    // const {role } = req.user;
+    const { role } = req.user;
 
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const answerID = req.params.id;
     await Dashboard.deleteanswer(answerID);
     res
@@ -597,12 +680,14 @@ const deleteanswer = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
 
   try {
     const user = await Dashboard.login(email);
 
-    if (!user || typeof user === "string") {
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if (!user || !isPasswordMatch) {
       return res
         .status(401)
         .json({ success: false, message: "Invalid email or password" });
@@ -610,10 +695,12 @@ const login = async (req, res) => {
 
     const { id, role } = user;
 
-    // if (role !== 'admin') {
-
-    //   return res.status(401).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    if (role !== "admin") {
+      return res.status(401).json({
+        success: false,
+        message: "Access denied. Only admins are allowed.",
+      });
+    }
 
     const token = jwt.sign(
       { userId: id, email, role },
@@ -632,10 +719,13 @@ const login = async (req, res) => {
 
 const allusers = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 5;
@@ -656,10 +746,13 @@ const allusers = async (req, res) => {
 
 const countusers = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const count = await Dashboard.countusers();
     return res.status(200).json({ succes: true, count });
   } catch (err) {
@@ -669,10 +762,13 @@ const countusers = async (req, res) => {
 };
 const countcourses = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const count = await Dashboard.countcourses();
     return res.status(200).json({ succes: true, count });
   } catch (err) {
@@ -682,10 +778,13 @@ const countcourses = async (req, res) => {
 };
 const countworkshops = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const count = await Dashboard.countworkshops();
     return res.status(200).json({ succes: true, count });
   } catch (err) {
@@ -695,10 +794,13 @@ const countworkshops = async (req, res) => {
 };
 const counttechtips = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const count = await Dashboard.counttechtips();
     return res.status(200).json({ succes: true, count });
   } catch (err) {
@@ -708,10 +810,13 @@ const counttechtips = async (req, res) => {
 };
 const countfaq = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const count = await Dashboard.countfaq();
     return res.status(200).json({ succes: true, count });
   } catch (err) {
@@ -721,10 +826,13 @@ const countfaq = async (req, res) => {
 };
 const countlessons = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const count = await Dashboard.countlessons();
     return res.status(200).json({ succes: true, count });
   } catch (err) {
@@ -735,10 +843,13 @@ const countlessons = async (req, res) => {
 
 const attendances = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const courseID = req.params.id;
     const attendances = await Dashboard.attendances(courseID);
     return res.status(200).json({ succes: true, attendances });
@@ -750,10 +861,13 @@ const attendances = async (req, res) => {
 
 const countattendances = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const courseID = req.params.id;
     const count = await Dashboard.countattendances(courseID);
     return res.status(200).json({ succes: true, count });
@@ -765,10 +879,13 @@ const countattendances = async (req, res) => {
 
 const topratedcourse = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const course = await Dashboard.topratedcourse();
     return res.status(200).json({ succes: true, course });
@@ -779,10 +896,13 @@ const topratedcourse = async (req, res) => {
 };
 const topratedworkshop = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const workshop = await Dashboard.topratedworkshop();
     return res.status(200).json({ succes: true, workshop });
@@ -794,10 +914,13 @@ const topratedworkshop = async (req, res) => {
 
 const topratedlesson = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const lesson = await Dashboard.topratedlesson();
     return res.status(200).json({ succes: true, lesson });
@@ -809,10 +932,13 @@ const topratedlesson = async (req, res) => {
 
 const minratedcourse = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const course = await Dashboard.minratedcourse();
     return res.status(200).json({ succes: true, course });
@@ -824,10 +950,13 @@ const minratedcourse = async (req, res) => {
 
 const minratedworkshop = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const workshop = await Dashboard.minratedworkshop();
     return res.status(200).json({ succes: true, workshop });
@@ -838,10 +967,13 @@ const minratedworkshop = async (req, res) => {
 };
 const minratedlesson = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const lesson = await Dashboard.minratedlesson();
     return res.status(200).json({ succes: true, lesson });
@@ -853,10 +985,13 @@ const minratedlesson = async (req, res) => {
 
 const mostenrolledcourse = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const course = await Dashboard.mostenrolledcourse();
     return res.status(200).json({ succes: true, course });
@@ -867,10 +1002,13 @@ const mostenrolledcourse = async (req, res) => {
 };
 const mostenrolledworkshop = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const course = await Dashboard.mostenrolledworkshop();
     return res.status(200).json({ succes: true, course });
@@ -882,10 +1020,13 @@ const mostenrolledworkshop = async (req, res) => {
 
 const mostviewedvideo = async (req, res) => {
   try {
-    // const { role } = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
 
     const video = await Dashboard.mostviewedvideo();
     return res.status(200).json({ success: true, video });
@@ -897,10 +1038,13 @@ const mostviewedvideo = async (req, res) => {
 
 const videoviewers = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const lessonID = req.params.id;
     const viewer = await Dashboard.videoviewers(lessonID);
     return res.status(200).json({ succes: true, viewer });
@@ -912,10 +1056,13 @@ const videoviewers = async (req, res) => {
 
 const countvideoviewers = async (req, res) => {
   try {
-    // const {role} = req.user;
-    // if (role !== 'admin') {
-    //   return res.status(403).json({ success: false, message: 'Access denied. Only admin are allowed.' });
-    // }
+    const { role } = req.user;
+    if (role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only admin are allowed.",
+      });
+    }
     const lessonID = req.params.id;
     const count = await Dashboard.countvideoviewers(lessonID);
     return res.status(200).json({ succes: true, count });
@@ -967,4 +1114,5 @@ module.exports = {
   counttechtips,
   countfaq,
   uploadlessonimage,
+  deletelesson,
 };

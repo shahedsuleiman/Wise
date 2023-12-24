@@ -22,13 +22,23 @@ function ChatBot() {
 
     try {
       const response = await axios.post("http://localhost:8080/chatbot", {
-        text: typedMessage, // Sending the message in the expected format
+        messages: [typedMessage],
       });
+
+      // Extract both question and answer from the response
+      const botRequest = response.data.responses[0].question;
+      const botResponse = response.data.responses[0].answer;
+
+      // Log the entire response, question, and the bot's answer
+      console.log(response.data);
+      console.log(botRequest);
+      console.log(botResponse);
 
       // Update conversation with the bot's response
       setConversation([
         ...conversation,
-        { text: response.data.text, isBot: true },
+        { text: typedMessage, isBot: false },
+        { text: botResponse, isBot: true },
       ]);
     } catch (error) {
       console.error("Error sending message:", error);

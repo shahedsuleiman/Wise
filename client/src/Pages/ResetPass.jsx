@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
+import background from "../assets/background.png";
+
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function ResetPass() {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [resetSuccess, setResetSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
@@ -14,7 +20,7 @@ function ResetPass() {
       if (newPassword === confirmPassword) {
         const response = await axios.put(
           "http://localhost:8080/resetpassword",
-          { email, newPassword }
+          { password: newPassword, email } // Modify the keys here
         );
 
         if (response.status === 200) {
@@ -25,13 +31,29 @@ function ResetPass() {
       } else {
         setErrorMessage("Passwords do not match.");
       }
+
+      Swal.fire({
+        icon: "success",
+        title: "Enrollment Successful!",
+        text: "You have successfully enrolled in the course.",
+      }).then(() => {
+        navigate("/");
+      });
     } catch (error) {
-      setErrorMessage("Something went wrong.");
+      console.error("Error:", error.response.data);
+      setErrorMessage("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <section class="bg-gray-50 dark:bg-gray-900">
+    <section
+      class=""
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+      }}
+    >
+      {" "}
       <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div class="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
           <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -55,6 +77,7 @@ function ResetPass() {
                 placeholder="john@gmail.com"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-950 focus:border-indigo-950 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+                value={email.email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -72,6 +95,7 @@ function ResetPass() {
                 placeholder="••••••••"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-950 focus:border-indigo-950 block w-full p-2.5 "
                 required
+                value={newPassword.password}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
             </div>
@@ -89,6 +113,7 @@ function ResetPass() {
                 placeholder="••••••••"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-950 focus:border-indigo-950 block w-full p-2.5 "
                 required
+                value={confirmPassword.password}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>

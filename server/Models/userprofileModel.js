@@ -46,7 +46,9 @@ Profile.reginfreecourse = async (userID, courseID) => {
     const registerQuery =
       "INSERT INTO course_attendances (course_id, user_id) VALUES ($1, $2) RETURNING *";
     const registerResult = await db.query(registerQuery, [courseID, userID]);
-
+    const updateSeatsQuery =
+      "UPDATE courses SET seats = seats - 1 WHERE id = $1";
+    await db.query(updateSeatsQuery, [courseID]);
     return registerResult.rows;
   } catch (err) {
     throw err;
@@ -64,11 +66,14 @@ Profile.reginpaidcourse = async (userID, courseID) => {
       if (userRole === "subscriber") {
         const registerQuery =
           "INSERT INTO course_attendances (course_id, user_id) VALUES ($1, $2) RETURNING *";
+
         const registerResult = await db.query(registerQuery, [
           courseID,
           userID,
         ]);
-
+        const updateSeatsQuery =
+          "UPDATE courses SET seats = seats - 1 WHERE id = $1";
+        await db.query(updateSeatsQuery, [courseID]);
         return registerResult.rows;
       } else if (userRole === "unsubscriber") {
         throw new Error("You are not subscribed to access paid courses.");
@@ -384,11 +389,15 @@ Profile.updatepassword = async (userID, hashedPassword) => {
 };
 
 Profile.unrolled = async (courseID, userID) => {
-  const result = await db.query(
-    "update course_attendances set is_deleted = true where course_attendances.course_id = $1 and user_id = $2",
-    [courseID, userID]
-  );
-  return result.rows;
+  try {
+    const result = await db.query(
+      "update course_attendances set is_deleted = true where course_attendances.course_id = $1 and user_id = $2",
+      [courseID, userID]
+    );
+    return result.rows;
+  } catch (err) {
+    throw err;
+  }
 };
 
 module.exports = Profile;

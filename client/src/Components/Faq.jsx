@@ -100,7 +100,6 @@ const AccordionItem = ({ header, text }) => {
     setActive(!active);
   };
 
-  // Extract the answer property if text is an object
   const answerText = typeof text === "object" ? text.answer : text;
 
   return (

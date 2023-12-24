@@ -13,10 +13,11 @@ Dashboard.createcourse = async (
   category_id,
   imageUrl,
   is_paid,
-  site
+  site,
+  seats
 ) => {
   const result = await db.query(
-    "INSERT INTO courses (title,detail,description,trainer,start_time,end_time,category_id,image,is_paid,site)  VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9,$10)",
+    "INSERT INTO courses (title,detail,description,trainer,start_time,end_time,category_id,image,is_paid,site,seats)  VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11)",
     [
       title,
       detail,
@@ -28,6 +29,7 @@ Dashboard.createcourse = async (
       imageUrl,
       is_paid,
       site,
+      seats,
     ]
   );
   return result.rows;
@@ -572,7 +574,7 @@ Dashboard.deleteanswer = async (answerID) => {
 Dashboard.login = async (email) => {
   try {
     const user = await db.query(
-      "SELECT users.id, email, roles.role  FROM users inner join roles on roles.id = users.role_id WHERE email = $1 And users.is_deleted= false;",
+      "SELECT users.id, email,password, roles.role  FROM users inner join roles on roles.id = users.role_id WHERE email = $1 And users.is_deleted= false;",
       [email]
     );
     if (user.rows[0]) {

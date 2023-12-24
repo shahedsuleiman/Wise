@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 import Header from "../Components/Header";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import SignUpWithGoogle from "../Components/SignUpWithGoogle";
 
 function RegisterPage() {
   const [cookies, setCookie] = useCookies(["token"]);
@@ -24,31 +25,13 @@ function RegisterPage() {
     phonenumber: "",
     birthdate: "",
   });
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // const validateForm = () => {
-  //   let errors = {};
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!formData.email || !emailRegex.test(formData.email)) {
-  //     errors.email = "Invalid email address";
-  //   }
-
-  //   if (!formData.password || formData.password.length < 8) {
-  //     errors.password = "Password must be at least 8 characters long";
-  //   }
-  //   const jordanianPhoneNumberRegex = /^\+9627[789]\d{7}$/;
-
-  //   if (!jordanianPhoneNumberRegex.test(formData.phonenumber)) {
-  //     errors.phonenumber = "Not a valid Jordanian phone number";
-  //   }
-
-  //   return Object.keys(errors).length === 0;
-  // };
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +53,7 @@ function RegisterPage() {
         if (error.response) {
           console.error("Server responded with status:", error.response.status);
           console.error("Response data:", error.response.data);
-          setErrors(error.response.data.errors);
+          setError(error.response.data.error);
         } else if (error.request) {
           console.error("No response received:", error.request);
         } else {
@@ -118,6 +101,13 @@ function RegisterPage() {
                         placeholder="firstName"
                         required=""
                       />
+                      {error !== null && error.includes("first_name") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-sm">
+                            First name must be at least 3 characters long
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -133,6 +123,13 @@ function RegisterPage() {
                         placeholder="lastName"
                         required=""
                       />
+                      {error !== null && error.includes("last_name") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-red-500">
+                            Last name must be at least 3 characters long
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -148,11 +145,13 @@ function RegisterPage() {
                         placeholder="username"
                         required=""
                       />
-                      {/* {errors.user_name && (
-                        <p className="text-red-500 tex t-xs mt-1">
-                          {errors.user_name}
-                        </p>
-                      )} */}
+                      {error !== null && error.includes("user_name") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-red-500">
+                            User name must be at least 3 characters long
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -172,11 +171,13 @@ function RegisterPage() {
                         placeholder="name@company.com"
                         required=""
                       />
-                      {/* {errors.email && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.email}
-                        </p>
-                      )} */}
+                      {error !== null && error.includes("email") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-red-500">
+                            Email must be a Gmail address
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label
@@ -195,38 +196,15 @@ function RegisterPage() {
                         placeholder="+962799999999"
                         required
                       />
-                      {/* {errors.phonenumber && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.phonenumber}
-                        </p>
-                      )} */}
+                      {error !== null && error.includes("phonenumber") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-red-500">
+                            Please enter a valid 10-digit phone number starting
+                            with 077, 078, or 079.
+                          </p>
+                        </div>
+                      )}
                     </div>
-                    {/* 
-                    <div class="relative max-w-sm">
-                      <label class="mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Birth Date
-                      </label>
-                      <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pt-5 pointer-events-none">
-                        <svg
-                          class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                        </svg>
-                      </div>
-                      <input
-                        datepicker
-                        type="text"
-                        name="birthdate"
-                        value={formData.birthdate}
-                        onChange={handleInputChange}
-                        class="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-900 focus:border-indigo-900 focus:z-10 sm:text-sm"
-                        placeholder="Select date"
-                      />
-                    </div> */}
 
                     <div>
                       <label
@@ -245,11 +223,15 @@ function RegisterPage() {
                         class="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-900 focus:border-indigo-900 focus:z-10 sm:text-sm"
                         required=""
                       />
-                      {/* {errors.password && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.password}
-                        </p>
-                      )} */}
+                      {error !== null && error.includes("password") && (
+                        <div className="bg-red-100 border mt-3 border-red-400 text-red-700 px-4 py-2 rounded-md mb-4">
+                          <p className="text-red-500">
+                            Password must be at least 8 characters long and
+                            include at least one uppercase letter, one lowercase
+                            letter, one number, and one of @, #, !, $, %, or &."
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -265,11 +247,6 @@ function RegisterPage() {
                         class="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-900 focus:border-indigo-900 focus:z-10 sm:text-sm"
                         required=""
                       />
-                      {/* {errors.confirm_password && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.confirm_password}
-                        </p>
-                      )} */}
                     </div>
                     <button
                       type="submit"
@@ -280,6 +257,7 @@ function RegisterPage() {
                       </span>
                     </button>
                   </form>
+                  <SignUpWithGoogle />
                 </div>
               </div>
             </div>

@@ -7,11 +7,12 @@ import UpdateCourseModal from "../Modals/CourseModal";
 import CreateCourse from "../Modals/CreateCourse";
 import CourseModal from "../Modals/CourseModal";
 import { Link } from "react-router-dom";
-// import { useAuth } from "../Context/AuthContext";
-// import { useCookies } from "react-cookie";
+import { useAuth } from "../Context/AuthContext";
+
+import { useCookies } from "react-cookie";
 
 function CoursesTable() {
-  // const [cookies] = useCookies(["token"]);
+  const [cookies] = useCookies(["token"]);
   const [courses, setCourses] = useState([]);
 
   const [createCourse, setCreatedCourse] = useState({
@@ -33,8 +34,8 @@ function CoursesTable() {
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  // const token = cookies.Token;
-  // const { headers } = useAuth();
+  const token = cookies.Token;
+  const { headers } = useAuth();
   const [page, setPage] = useState(1); // Current page
   const [limit, setLimit] = useState(5); // Users per page
 
@@ -44,7 +45,7 @@ function CoursesTable() {
 
   const fetchCourses = async () => {
     try {
-      // axios.defaults.headers.common["Authorization"] = token;
+      axios.defaults.headers.common["Authorization"] = token;
       const response = await axios.get(
         `http://localhost:8080/dashboard/allcourses?page=${page}&limit=${limit}`
       );
@@ -57,7 +58,7 @@ function CoursesTable() {
 
   const deleteCourse = async (courseId) => {
     try {
-      // Make an API call to delete the course by its ID
+      axios.defaults.headers.common["Authorization"] = token;
       await axios.put(
         `http://localhost:8080/dashboard/deletecourse/${courseId}`
       );

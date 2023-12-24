@@ -123,221 +123,10 @@ Course.allelderliesworkshops = async () => {
   }
 };
 
-Course.onsiteelderliescourses = async () => {
-  try {
-    const queryResult = await db.query(`
-        SELECT 
-          courses.id,
-          courses.title,
-          courses.description,
-          courses.trainer,
-          REPLACE(courses.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image,
-          categories.category,
-          courses.start_time,
-        courses.end_time,
-          courses.site
-        FROM 
-          courses
-          INNER JOIN categories ON categories.id = courses.category_id
-        WHERE 
-          courses.category_id = 1 and courses.is_deleted = false;
-      `);
-
-    const formattedResult = await Promise.all(
-      queryResult.rows.map(async (row) => {
-        if (row.start_time !== null) {
-          row.start_time = row.start_time.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-          });
-
-          if (row.end_time !== null) {
-            row.end_time = row.end_time.toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-            });
-          }
-        }
-
-        const imageRef = storage.bucket().file("images/" + row.image);
-        const [url] = await imageRef.getSignedUrl({
-          action: "read",
-          expires: "01-01-2500",
-        });
-        row.image = url;
-
-        return row;
-      })
-    );
-
-    return formattedResult;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Course.onsiteworkshops = async () => {
-  try {
-    const queryResult = await db.query(`
-        SELECT 
-          courses.id,
-          courses.title,
-          courses.description,
-          courses.trainer,
-          REPLACE(courses.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image,
-          categories.category,
-          courses.start_time,
-          courses.end_time,
-          courses.site
-        FROM 
-          courses
-          INNER JOIN categories ON categories.id = courses.category_id
-        WHERE 
-        courses.category_id = 3 and courses.is_deleted = false;
-      `);
-
-    const formattedResult = await Promise.all(
-      queryResult.rows.map(async (row) => {
-        if (row.start_time !== null) {
-          row.start_time = row.start_time.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-          });
-
-          if (row.end_time !== null) {
-            row.end_time = row.end_time.toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-            });
-          }
-        }
-
-        const imageRef = storage.bucket().file("images/" + row.image);
-        const [url] = await imageRef.getSignedUrl({
-          action: "read",
-          expires: "01-01-2500",
-        });
-        row.image = url;
-
-        return row;
-      })
-    );
-
-    return formattedResult;
-  } catch (err) {
-    throw err;
-  }
-};
-Course.onlineworkshops = async () => {
-  try {
-    const queryResult = await db.query(`
-        SELECT 
-          courses.id,
-          courses.title,
-          courses.description,
-          courses.trainer,
-          REPLACE(courses.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image,
-          categories.category,
-          courses.start_time,
-          courses.end_time,
-          courses.site
-        FROM 
-          courses
-          INNER JOIN categories ON categories.id = courses.category_id
-        WHERE 
-        courses.category_id = 4 and courses.is_deleted = false;
-      `);
-
-    const formattedResult = await Promise.all(
-      queryResult.rows.map(async (row) => {
-        if (row.start_time !== null) {
-          row.start_time = row.start_time.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-          });
-
-          if (row.end_time !== null) {
-            row.end_time = row.end_time.toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-            });
-          }
-        }
-
-        const imageRef = storage.bucket().file("images/" + row.image);
-        const [url] = await imageRef.getSignedUrl({
-          action: "read",
-          expires: "01-01-2500",
-        });
-        row.image = url;
-
-        return row;
-      })
-    );
-
-    return formattedResult;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Course.onlineelderliescourses = async () => {
-  try {
-    const queryResult = await db.query(`
-      SELECT 
-        courses.id,
-        courses.title,
-        courses.description,
-        courses.trainer,
-        REPLACE(courses.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image,
-        categories.category
-      FROM courses
-        INNER JOIN categories ON categories.id = courses.category_id
-      WHERE 
-      courses.category_id = 2 and courses.is_deleted = false;
-    `);
-
-    const formattedResult = await Promise.all(
-      queryResult.rows.map(async (row) => {
-        const imageRef = storage.bucket().file("images/" + row.image);
-        const [url] = await imageRef.getSignedUrl({
-          action: "read",
-          expires: "01-01-2500",
-        });
-        row.image = url;
-
-        return row;
-      })
-    );
-    return formattedResult;
-  } catch (err) {
-    throw err;
-  }
-};
-
 Course.detail = async (courseId) => {
   try {
     const queryResult = await db.query(
-      `
-        SELECT 
+      `    SELECT 
           courses.id,
           courses.title,
           courses.description,
@@ -348,13 +137,13 @@ Course.detail = async (courseId) => {
           courses.start_time,
           courses.end_time,
           courses.site,
-          courses.is_paid
+          courses.is_paid,
+          courses.seats
         FROM 
           courses
           INNER JOIN categories ON categories.id = courses.category_id
         WHERE 
-          courses.id=$1 and courses.is_deleted = false;
-      `,
+          courses.id=$1 and courses.is_deleted = false;`,
       [courseId]
     );
 
@@ -386,7 +175,7 @@ Course.detail = async (courseId) => {
           expires: "01-01-2500",
         });
         row.image = url;
-
+        row.is_paid = row.is_paid ? "Paid" : "Free";
         return row;
       })
     );
@@ -521,8 +310,7 @@ Course.lessonpage = async (lessonID) => {
       SELECT 
         lesson.id,
         lesson.title,
-        REPLACE(lesson.video, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/videos/', '') AS video,
-        lesson.description
+        REPLACE(lesson.video, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/videos/', '') AS video
       FROM lesson
       WHERE lesson.id = $1 and  lesson.is_deleted = false;
     `,

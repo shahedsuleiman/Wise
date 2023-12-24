@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setIsLoggedIn(!!Cookies.get("Token"));
     setIsRegistered(!!Cookies.get("Token"));
-  }, []);
+  }, [isLoggedIn, isRegistered]);
 
   return (
     <AuthContext.Provider

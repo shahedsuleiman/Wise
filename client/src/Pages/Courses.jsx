@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import work1 from "../assets/work1.jpg";
-// import work2 from "../assets/work2.jpg";
+
 import { Link } from "react-router-dom";
-// import { Tab, initTE } from "tw-elements";
+
 import FilterList from "../Components/FilterList";
 import Footer from "../Components/Footer";
 import Header from "../Components/Header";
@@ -118,7 +117,13 @@ const Courses = () => {
                     By {course.trainer}
                   </p>
                   <p className="text-indigo-950 pb-2">{course.is_paid}</p>
-                  <Link to={`/courseDetails/${course.id}`}>
+                  <Link
+                    to={
+                      course.category.toLowerCase() === "online"
+                        ? `/courseDetails/${course.id}`
+                        : `/onsiteCourseDetails/${course.id}`
+                    }
+                  >
                     <button className="block w-full h-[2rem] rounded bg-indigo-950 px-10 py-2 text-sm font-medium text-white shadow hover:bg-indigo-900 focus:outline-none focus:ring active:bg-indigo-900 sm:w-auto  justify-end items-center transition duration-300">
                       View{" "}
                       <i className="fas fa-long-arrow-alt-right  text-white ml-2"></i>

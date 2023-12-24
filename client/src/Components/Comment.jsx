@@ -73,7 +73,7 @@ function Comment() {
           </div>
           <button
             type="submit"
-            className="inline-block px-6 py-3 text-xs font-medium text-white bg-primary-700 rounded-lg focus:outline-none hover:bg-primary-800"
+            className="px-4 py-3 text-indigo-950 transition-all rounded-lg transform border border-indigo-950 hover:bg-indigo-950  hover:text-gray-100"
           >
             Post comment
           </button>

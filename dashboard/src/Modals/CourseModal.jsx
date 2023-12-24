@@ -71,46 +71,7 @@ function CourseModal({ course, closeModal, updateCourse }) {
             className="border rounded-md px-2 py-1 mb-2 w-full"
           />
         </div>
-        {/* <div className="flex flex-col gap-y-2">
-          <label className="font-bold">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={updatedCourse.category}
-            onChange={handleInputChange}
-            className="border rounded-md px-2 py-1 mb-2 w-full"
-          />
-        </div> */}
-        {/* <div className="flex flex-col gap-y-2">
-          <label className="font-bold">Price</label>
-          <input
-            type="text"
-            name="is_paid"
-            value={updatedCourse.is_paid}
-            onChange={handleInputChange}
-            className="border rounded-md px-2 py-1 mb-2 w-full"
-          />
-        </div> */}
-        {/* <div className="flex flex-col gap-y-2">
-          <label className="font-bold">Image</label>
-          <input
-            type="file"
-            name="image"
-            value={updatedCourse.image}
-            onChange={handleInputChange}
-            className="border rounded-md px-2 py-1 mb-2 w-full"
-          />
-        </div> */}
-        {/* <div className="flex flex-col gap-y-2">
-          <label className="font-bold">Rate</label>
-          <input
-            type="text"
-            name="rate"
-            value={updatedCourse.rate}
-            onChange={handleInputChange}
-            className="border rounded-md px-2 py-1 mb-2 w-full"
-          />
-        </div> */}
+
         <div className="flex flex-col gap-y-2">
           <label className="font-bold">Start Time</label>
           <input
@@ -145,8 +106,6 @@ function CourseModal({ course, closeModal, updateCourse }) {
             Close
           </button>
         </div>
-        {/* ... Other input fields for editing other details */}
-        {/* <button onClick={handleSubmit}>Update Course</button> */}
       </div>
     </div>
   );

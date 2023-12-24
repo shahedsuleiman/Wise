@@ -16,8 +16,8 @@ function Subscribe() {
   return (
     <>
       <Header />
-      <div class="bg-white dark:bg-gray-900">
-        <div class="container px-6 py-8 mx-auto">
+      <div class="bg-white ">
+        <div class="container px-6 py-20 mx-auto">
           <div class="xl:items-center xl:-mx-8 xl:flex">
             <div class="flex flex-col items-center xl:items-start xl:mx-8">
               <h1 class="text-3xl font-medium text-gray-800 capitalize lg:text-4xl dark:text-white">
@@ -33,25 +33,6 @@ function Subscribe() {
               <p class="mt-4 font-medium text-gray-500 dark:text-gray-300">
                 You can get All Access by selecting your plan!
               </p>
-
-              <a
-                href="/"
-                class="flex items-center mt-4 -mx-1 text-sm text-gray-700 capitalize dark:text-blue-400 hover:underline hover:text-blue-600 dark:hover:text-blue-500"
-              >
-                <span class="mx-1">read more</span>
-                <svg
-                  class="w-4 h-4 mx-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </a>
             </div>
 
             <div class="flex-1 xl:mx-8">
@@ -181,14 +162,14 @@ function Subscribe() {
 
                     <h2 className="mt-4 text-2xl font-medium text-gray-700 sm:text-4xl dark:text-gray-300">
                       $70.00{" "}
-                      <span className="text-base font-medium">/life time</span>
+                      <span className="text-base font-medium">/Monthly</span>
                     </h2>
 
                     <p className="mt-1 text-gray-500 dark:text-gray-300">
-                      One time payment
+                      Monthly payment
                     </p>
 
-                    <button>
+                    <button className="w-full  ">
                       <Elements stripe={stripePromise}>
                         <CheckoutForm />
                       </Elements>

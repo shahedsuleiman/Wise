@@ -24,13 +24,13 @@ FAQ.addquestion = async (userID, question) => {
 
 FAQ.allansweredquestions = async () => {
   try {
-    const result = await db.query(
-      `SELECT MIN(id) AS id, question, COUNT(*) AS question_count
+    const result = await db.query(`
+      SELECT MIN(id) AS id, question, COUNT(*) AS question_count
       FROM faq
-      WHERE is_deletedq = false AND is_deleteda = false AND answer IS NOT NULL
+      WHERE is_deletedq = false AND is_deleteda = false 
       GROUP BY question
-      HAVING COUNT(*) > 1;`
-    );
+      HAVING COUNT(*) > 1;
+      `);
 
     return result.rows;
   } catch (err) {

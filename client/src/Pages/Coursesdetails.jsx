@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { withRouter } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Header from "../Components/Header";
@@ -153,12 +152,6 @@ function Coursesdetails() {
                 ? courseDetails.course[0].detail
                 : "Details Not Available"}
             </p>
-            <button
-              onClick={handleEnroll}
-              class="px-4 py-3 text-indigo-950 transition-all transform border border-indigo-950 hover:bg-indigo-950  hover:text-gray-100"
-            >
-              Enroll Now
-            </button>
           </div>
         </div>
 

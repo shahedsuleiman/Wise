@@ -148,9 +148,6 @@ const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "subscription",
-      // subscription_data: {
-      //   trial_period_days: 7,
-      // },
     };
 
     const customer = await stripe.customers.create({
@@ -163,18 +160,30 @@ const createCheckoutSession = async (req, res) => {
 
     const session = await stripe.checkout.sessions.create({
       customer: customer.id,
-      success_url: "https://localhost:3000/success",
-      cancel_url: "https://localhost:3000/cancel",
+      success_url: "http://localhost:3000/successs",
+      cancel_url: "http://localhost:3000/cancel",
       line_items: checkoutObject.line_items,
       mode: checkoutObject.mode,
       subscription_data: checkoutObject.subscription_data,
     });
 
     res.json({ id: session.id });
-    await User.checkconfirm(userID);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, error: "Payment failed" });
+  }
+};
+
+const updateuserrole = async (req, res) => {
+  try {
+    const userID = req.user.userId;
+    await User.checkconfirm(userID);
+    res.status(200).json({ success: true, message: "user updated success" });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, error: "User Role updated failed" });
   }
 };
 
@@ -275,6 +284,7 @@ module.exports = {
   login,
   cont,
   createCheckoutSession,
+  updateuserrole,
   forgetpassword,
   verifycode,
   resetpassword,

@@ -29,7 +29,7 @@ function Profile() {
         rel="stylesheet"
       />
 
-      <div class="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">
+      <div class="bg-white w-full flex flex-col gap-5 mt-16 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">
         <button
           className="md:hidden fixed bottom-5 right-5 z-50 p-3 bg-indigo-950 text-white rounded"
           onClick={toggleSidebar}

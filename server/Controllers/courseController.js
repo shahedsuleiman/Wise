@@ -54,10 +54,10 @@ const alllesons = async (req, res) => {
     const courseDetails = await Course.detail(courseID);
 
     const is_paid = courseDetails[0].is_paid;
-    if (is_paid === true) {
+    if (is_paid === "Paid") {
       const lessons = await Course.alllessonspaid(courseID);
       res.status(201).json({ success: true, lessons });
-    } else if (is_paid === false) {
+    } else if (is_paid === "Free") {
       const lessons = await Course.alllessonsfree(courseID);
       res.status(201).json({ success: true, lessons });
     } else {
@@ -65,12 +65,10 @@ const alllesons = async (req, res) => {
     }
   } catch (err) {
     console.error(err);
-    res
-      .status(400)
-      .json({
-        success: false,
-        error: err.message || "Course registration failed",
-      });
+    res.status(400).json({
+      success: false,
+      error: err.message || "Course registration failed",
+    });
   }
 };
 const alllesonsauth = async (req, res, userID) => {
@@ -80,11 +78,11 @@ const alllesonsauth = async (req, res, userID) => {
     const courseDetails = await Course.detail(courseID);
 
     const is_paid = courseDetails[0].is_paid;
-    if (is_paid === true) {
+    if (is_paid === "Paid") {
       const userID = req.user.userId;
       const lessons = await Course.alllessonspaidauth(userID, courseID);
       res.status(201).json({ success: true, lessons });
-    } else if (is_paid === false) {
+    } else if (is_paid === "Free") {
       const lessons = await Course.alllessonsfree(courseID);
       res.status(201).json({ success: true, lessons });
     } else {
@@ -92,12 +90,10 @@ const alllesonsauth = async (req, res, userID) => {
     }
   } catch (err) {
     console.error(err);
-    res
-      .status(400)
-      .json({
-        success: false,
-        error: err.message || "Course registration failed",
-      });
+    res.status(400).json({
+      success: false,
+      error: err.message || "Course registration failed",
+    });
   }
 };
 

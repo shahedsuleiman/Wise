@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import background from "../assets/background.png";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +35,13 @@ function VerifyCode() {
     }
   };
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 py-12">
+    <div
+      className="flex justify-center items-center min-h-screen  py-12"
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+      }}
+    >
       <div className="bg-white px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
         <div className="flex flex-col items-center justify-center text-center space-y-2">
           <div className="font-semibold text-3xl">
@@ -68,7 +75,7 @@ function VerifyCode() {
 
           <div className="flex flex-col space-y-5 mt-8">
             <div>
-              <button className="flex items-center justify-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+              <button className="flex items-center justify-center w-full border rounded-xl outline-none py-5 bg-indigo-950 border-none text-white text-sm shadow-sm">
                 Verify Account
               </button>
             </div>
@@ -76,7 +83,7 @@ function VerifyCode() {
             <div className="flex items-center justify-center text-sm font-medium space-x-1 text-gray-500">
               <p>Didn't receive code?</p>{" "}
               <a
-                className="flex items-center text-blue-600"
+                className="flex items-center text-indigo-950"
                 href="http://"
                 target="_blank"
                 rel="noopener noreferrer"
