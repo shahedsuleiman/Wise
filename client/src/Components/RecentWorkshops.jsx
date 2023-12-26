@@ -72,7 +72,6 @@ function RecentWorkshops() {
       .then((response) => {
         if (response.data.success) {
           setWorkshops(response.data.courses);
-          console.log(response.data.courses);
         } else {
           console.error("Failed to fetch workshops.");
         }
@@ -91,9 +90,11 @@ function RecentWorkshops() {
           </h3>
         </div>
         <div className="mt-6  px-6 md:mt-0">
-          <button className="linear rounded-[20px] bg-indigo-950 px-4 py-2 text-base font-medium text-white transition duration-200 hover:bg-indigo-900 active:bg-brand-700">
-            View All
-          </button>
+          <Link to="/workshop">
+            <button className="linear rounded-[20px] bg-indigo-950 px-4 py-2 text-base font-medium text-white transition duration-200 hover:bg-indigo-900 active:bg-brand-700">
+              View All
+            </button>
+          </Link>
         </div>
       </div>
       <section>

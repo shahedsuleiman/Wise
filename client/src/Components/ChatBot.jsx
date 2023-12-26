@@ -17,7 +17,6 @@ function ChatBot() {
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
-    // Add user's message to the conversation
     setConversation([...conversation, { text: typedMessage, isBot: false }]);
 
     try {
@@ -25,16 +24,9 @@ function ChatBot() {
         messages: [typedMessage],
       });
 
-      // Extract both question and answer from the response
       const botRequest = response.data.responses[0].question;
       const botResponse = response.data.responses[0].answer;
 
-      // Log the entire response, question, and the bot's answer
-      console.log(response.data);
-      console.log(botRequest);
-      console.log(botResponse);
-
-      // Update conversation with the bot's response
       setConversation([
         ...conversation,
         { text: typedMessage, isBot: false },
@@ -80,7 +72,7 @@ function ChatBot() {
           style={{
             boxShadow: "0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(28, 49, 105)",
           }}
-          className="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px]"
+          className="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4 bg-white p-6 rounded-lg border border-[#e5e7eb] w-[440px] h-[400px] overflow-y-auto "
         >
           {conversation.map((message, index) => (
             <div

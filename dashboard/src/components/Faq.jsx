@@ -58,6 +58,7 @@ function Faq() {
   const closeModal = () => {
     setShowModal(false);
     setSelectedFaq(null);
+    console.log("Modal is close");
   };
 
   const updateFaq = (updatedFaqData) => {
@@ -151,7 +152,7 @@ function Faq() {
                           <tr
                             key={index}
                             className={
-                              index % 2 !== 0 ? "bg-white" : "bg-[#F7F1EE]"
+                              index % 2 !== 0 ? "bg-white" : "bg-[#d5c5df]"
                             }
                           >
                             <td class="py-3 ps-4">
@@ -200,7 +201,10 @@ function Faq() {
                   <ReplayModal
                     addFaq={createFaq}
                     closeModal={() => setShowCreateModal(false)}
-                    addedFaq={setCreatedFaq}
+                    addedFaq={(newFaq) => {
+                      setCreatedFaq(newFaq); // Assuming newFaq is the format returned by your API
+                      setShowCreateModal(false);
+                    }}
                   />
                 )}
               </div>

@@ -2,17 +2,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function FilterWorkshop({ filterByDate, filterByType }) {
-  const [openSort, setOpenSort] = useState(false);
-  const [sortType, setSortType] = useState("Sort by");
+  // const [openSort, setOpenSort] = useState(false);
+  // const [sortType, setSortType] = useState("Sort by");
 
-  const handleSortClick = (type) => {
-    setSortType(type);
-    setOpenSort(!openSort);
-  };
+  // const handleSortClick = (type) => {
+  //   setSortType(type);
+  //   setOpenSort(!openSort);
+  // };
   return (
     <>
       <div className="w-full flex justify-center">
-        <div className="relative">
+        {/* <div className="relative">
           <button
             onClick={() => {
               filterByDate("Date");
@@ -55,7 +55,7 @@ function FilterWorkshop({ filterByDate, filterByType }) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
 
         <div className="max-w-screen-md ">
           <div className="bg-white py-4 px-3">
@@ -63,14 +63,14 @@ function FilterWorkshop({ filterByDate, filterByType }) {
               <Link
                 to="#"
                 onClick={() => filterByType("All")}
-                className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
+                className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-md font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
               >
                 All
               </Link>
               <Link
                 to="#"
                 onClick={() => filterByType("workshop-online")}
-                className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
+                className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-md font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
               >
                 Online
               </Link>
@@ -78,7 +78,7 @@ function FilterWorkshop({ filterByDate, filterByType }) {
               <Link
                 to="#"
                 onClick={() => filterByType("workshop-onsite")}
-                className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
+                className="inline-flex whitespace-nowrap border-b-2 border-transparent py-3 px-3 text-md font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-indigo-950 hover:text-indigo-950"
               >
                 Onsite
               </Link>

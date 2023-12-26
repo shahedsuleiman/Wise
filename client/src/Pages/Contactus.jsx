@@ -21,7 +21,6 @@ function Contactus() {
 
   const fetchQuestions = async () => {
     try {
-      console.log(questions.id);
       const response = await axios.get("http://localhost:8080/faq/all");
       console.log(response.data);
       setQuestions(response.data);
@@ -32,11 +31,10 @@ function Contactus() {
 
   const fetchAnswer = async (questionId) => {
     try {
-      console.log(questionId);
       const response = await axios.get(
         `http://localhost:8080/faq/${questionId}/answer`
       );
-      console.log(response.data);
+
       setAnswer(response.data[0].answer);
       return response.data[0].answer;
     } catch (error) {
@@ -63,9 +61,8 @@ function Contactus() {
   return (
     <>
       <div
-        className="w-full  dark:bg-gray-500 py-10 "
+        className="w-full dark:bg-gray-500 py-10"
         style={{
-          width: "100%",
           backgroundImage: `url(${contact})`,
           backgroundPosition: "center center",
           backgroundBlendMode: "multiply",
@@ -77,23 +74,22 @@ function Contactus() {
         <div className="absolute inset-0">
           <div className="bg-gradient-to-b from-indigo-950 via-transparent to-transparent h-[45rem]"></div>
         </div>
-        <div className="container py-24 h-[20rem] sm:h-[22rem]  flex flex-col sm:flex-col md:flex-col  flex-wrap content-center justify-center ">
-          <h1 className=" z-10 text-5xl py-5 antialiased font-semibold leadi text-center text-white">
+        <div className="container py-24 sm:py-28 md:py-32 flex flex-col justify-center items-center">
+          <h1 className="z-10 text-4xl sm:text-5xl py-5 antialiased font-semibold text-center text-white">
             How May We Help You?
           </h1>
 
-          <div className="flex flex-row z-10">
+          <div className="flex flex-col sm:flex-row w-full max-w-3xl mx-auto">
             <input
               type="text"
               placeholder="Ask Us :)"
-              className="w-full sm:w-2/3 p-3 rounded-l-lg "
-              fdprocessedid="j22ud"
+              value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              className="w-full sm:w-2/3 p-3 rounded-l-lg mb-3 sm:mb-0 sm:mr-1"
             />
             <button
               type="button"
-              className="w-full sm:w-1/3 p-3 font-semibold bg-indigo-950 text-white  rounded-r-lg "
-              fdprocessedid="8d0pnm"
+              className="w-full sm:w-1/3 p-3 font-semibold bg-indigo-950 text-white rounded-r-lg"
               onClick={submitQuestion}
             >
               Submit

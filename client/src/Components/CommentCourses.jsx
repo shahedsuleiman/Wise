@@ -15,14 +15,12 @@ function CommentCourses() {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        console.log("Workshop ID:", id);
         axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.get(
           `http://localhost:8080/course/${id}/getcomments`
         );
 
         setComments(response.data);
-        console.log("API response:", response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -87,16 +85,11 @@ function CommentCourses() {
           commentData.comments.map((comment) => (
             <article
               key={comment.id}
-              className="p-6 bg-white rounded-lg dark:bg-gray-900 shadow-md mb-4"
+              className="p-6 bg-[#d5c5df] rounded-lg dark:bg-gray-900 shadow-md mb-4"
             >
               <footer className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
-                  <img
-                    className="mr-2 w-8 h-8 rounded-full"
-                    src="placeholder_image_url_or_default"
-                    alt="User Avatar"
-                  />
-                  <p className="text-sm text-gray-900 dark:text-white font-semibold">
+                  <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
                     {comment.user_name}
                   </p>
                 </div>
@@ -153,7 +146,7 @@ function CommentCourses() {
                   </ul>
                 </div>
               </footer>
-              {/* Comment content */}
+
               <p className="text-gray-700 dark:text-gray-400">
                 {comment.course_comment}
               </p>

@@ -83,7 +83,7 @@ function CoursesOnsite() {
                 alt="image_description"
               />
               <div className="absolute top-44 left-24 max-w-full md:left-60 z-10">
-                <div className="bg-indigo-950 bg-opacity-60 text-4xl font-bold text-indigo-950 mix-blend-screen px-10 py-5">
+                <div className="bg-[#d5c5df] bg-opacity-60 text-4xl font-bold text-[#522883] mix-blend-screen px-10 py-5">
                   {courseDetails.course && courseDetails.course[0].title
                     ? courseDetails.course[0].title
                     : "Title Not Available"}
@@ -104,7 +104,7 @@ function CoursesOnsite() {
             <button
               onClick={handleEnroll}
               className={`px-4 py-3 text-indigo-950 transition-all rounded-lg transform border border-indigo-950 hover:bg-indigo-950  hover:text-gray-100 ${
-                isEnrolled ? "hidden" : "" // Hide the button if the user is enrolled
+                isEnrolled ? "hidden" : ""
               }`}
             >
               Enroll Now

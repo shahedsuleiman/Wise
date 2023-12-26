@@ -77,7 +77,6 @@ function Coursesdetails() {
     const fetchCourseLessons = async () => {
       try {
         if (token) {
-          console.log(token);
           axios.defaults.headers.common["Authorization"] = token;
           const response = await axios.get(
             `http://localhost:8080/course/${id}/allessonsauth`

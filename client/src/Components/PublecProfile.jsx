@@ -34,7 +34,6 @@ function PublecProfile() {
         const response = await axios.get("http://localhost:8080/profile");
 
         setUserInfo(response.data.info[0]);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error.response);
       }
@@ -94,8 +93,6 @@ function PublecProfile() {
           },
         }
       );
-
-      console.log("User data updated!", response.data);
     } catch (error) {
       console.error("Error updating user data:", error.response);
     }

@@ -47,6 +47,22 @@ User.register = async (
   }
 };
 
+User.createUsersGoogle = async (
+  first_name,
+  last_name,
+  username,
+  email,
+  picture
+) => {
+  const password = "By Google";
+  const query = `INSERT INTO users (first_name,last_name,user_name,email,password,image) VALUES ($1, $2, $3, $4, $5,$6)
+  RETURNING *`;
+
+  const values = [first_name, last_name, username, email, password, picture];
+  const user = await db.query(query, values);
+  return user.rows[0];
+};
+
 User.login = async (email) => {
   try {
     const user = await db.query(
@@ -61,6 +77,13 @@ User.login = async (email) => {
   } catch (error) {
     throw error;
   }
+};
+
+User.findByEmail = async (email) => {
+  const result = await db.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+  return result.rows[0];
 };
 
 User.checkconfirm = async (userID) => {

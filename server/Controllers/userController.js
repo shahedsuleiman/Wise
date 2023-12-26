@@ -107,8 +107,16 @@ const login = async (req, res) => {
 
   try {
     const user = await User.login(email);
+
+    if (!user || user.is_deleted || !user.password) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password" });
+    }
+
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!user || user.is_deleted || !isPasswordMatch) {
+
+    if (!isPasswordMatch) {
       return res
         .status(401)
         .json({ success: false, message: "Invalid email or password" });
@@ -176,6 +184,7 @@ const createCheckoutSession = async (req, res) => {
 
 const updateuserrole = async (req, res) => {
   try {
+    console.log("woooooooooow");
     const userID = req.user.userId;
     await User.checkconfirm(userID);
     res.status(200).json({ success: true, message: "user updated success" });
@@ -224,7 +233,7 @@ const forgetpassword = async (req, res) => {
 
 const verifycode = async (req, res) => {
   const { code } = req.body;
-  console.log("Verification code received:", code);
+
   try {
     const storedCode = await User.getcode(code);
 
@@ -284,8 +293,8 @@ module.exports = {
   login,
   cont,
   createCheckoutSession,
-  updateuserrole,
   forgetpassword,
   verifycode,
   resetpassword,
+  updateuserrole,
 };

@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Cookies from "js-cookie";
-import { useAuth } from "../Context/AuthContext";
 import { useCookies } from "react-cookie";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import background from "../assets/background.png";
 
 function Success() {
   const [cookies] = useCookies(["token"]);
@@ -35,30 +32,51 @@ function Success() {
   }, [token]);
 
   return (
-    <div class="bg-white h-screen">
-      <div class="bg-white p-6  md:mx-auto">
-        <svg viewBox="0 0 24 24" class="text-indigo-950 w-16 h-16 mx-auto my-6">
-          <path
-            fill="currentColor"
-            d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-          ></path>
-        </svg>
-        <div class="text-center">
-          <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">
-            Subscription Done!
-          </h3>
-          <p class="text-gray-600 my-2">
-            Thank you for completing your secure online payment.
-          </p>
+    <div
+      class="flex items-center justify-center h-screen"
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+      }}
+    >
+      <div class="p-4 rounded shadow-lg ring ring-[#522883]/50">
+        <div class="flex flex-col items-center space-y-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="text-[#522883] w-28 h-28"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <h1 class="text-4xl font-bold">Thank You !</h1>
+          <p>Thank you for completing your secure online payment.</p>
           <p> Have a great day! :) </p>
-          <div class="py-10 text-center">
-            <Link
-              to="/"
-              class="px-12 bg-indigo-950 hover:bg-indigo-900 text-white font-semibold py-3"
-            >
-              GO BACK
-            </Link>
-          </div>
+          <Link to="/">
+            <button class="inline-flex items-center px-4 py-2 text-white bg-[#522883] border border-[#522883] rounded-full hover:bg-[#4f3869] focus:outline-none focus:ring">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-3 h-3 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7 16l-4-4m0 0l4-4m-4 4h18"
+                />
+              </svg>
+              <span class="text-sm font-medium">Home</span>
+            </button>
+          </Link>
         </div>
       </div>
     </div>

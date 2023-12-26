@@ -7,7 +7,8 @@ import background from "../assets/background.png";
 import FormHeader from "../Components/FormHeader";
 
 import { useAuth } from "../Context/AuthContext";
-import SignUpWithGoogle from "../Components/SignUpWithGoogle";
+
+import GoolgeSignInButton from "../Components/GoogleSignup";
 
 const LoginPage = () => {
   const { isLoggedIn, login, logout } = useAuth();
@@ -147,7 +148,7 @@ const LoginPage = () => {
                       </span>
                     </button>
                   </form>
-                  <SignUpWithGoogle />
+                  <GoolgeSignInButton />
                 </div>
               </div>
             </div>

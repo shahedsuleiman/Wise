@@ -8,7 +8,7 @@ function ProfilePass() {
     oldpassword: "",
     newpassword: "",
   });
-  
+
   const [cookies] = useCookies(["token"]);
   const token = cookies.Token;
   useEffect(() => {
@@ -19,7 +19,7 @@ function ProfilePass() {
     const { name, value } = e.target;
     setUserPass({ ...userPass, [name]: value });
   };
-  
+
   const handleUpdate = async () => {
     try {
       if (!token) {
@@ -40,70 +40,52 @@ function ProfilePass() {
     }
   };
 
-
- 
-  
-
   return (
     <>
-      <form className="w-full mt-10 max-w-lg mx-auto">
-        <div className="md:flex flex-col md:justify-center md:items-start mb-6">
-          <div className="md:w-1/3">
-            <label
-              className="block text-indigo-950 font-bold mb-1 md:mb-0 pr-4 text-right md:text-left"
-              htmlFor="inline-oldPassword"
-            >
-              Old Password
-            </label>
-          </div>
-          <div className="md:w-2/3">
-            <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-indigo-950"
-              id="oldpassword"
-              type="password"
-              name = "oldpassword"
-              placeholder="******************"
-              value={userPass.oldpassword}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
-        <div className="md:flex flex-col md:justify-center md:items-start mb-6">
-          <div className="md:w-1/3">
-            <label
-              className="block text-indigo-950 font-bold mb-1 md:mb-0 pr-4 text-right md:text-left"
-              htmlFor="inline-newPassword"
-            >
-              New Password
-            </label>
-          </div>
-          <div className="md:w-2/3">
-            <input
-              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-indigo-950"
-              id="newpassword"
-              type="password"
-              name="newpassword"
-              placeholder="******************"
-              value={userPass.newpassword}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
-
-        <div className="md:flex md:items-center mb-6"></div>
-        <div className="md:flex flex-col  md:items-start">
-          <div className="md:w-1/3"></div>
-          <div className="md:w-2/3 text-center">
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md w-full">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Change Password
+          </h2>
+          <form className="space-y-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Old Password
+              </label>
+              <input
+                className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-indigo-500"
+                id="oldpassword"
+                type="password"
+                name="oldpassword"
+                placeholder="Enter old password"
+                value={userPass.oldpassword}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                New Password
+              </label>
+              <input
+                className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-indigo-500"
+                id="newpassword"
+                type="password"
+                name="newpassword"
+                placeholder="Enter new password"
+                value={userPass.newpassword}
+                onChange={handleInputChange}
+              />
+            </div>
             <button
-              className="flex-col md:items-start bg-indigo-950 hover:bg-indigo-900 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+              className="bg-indigo-950 hover:bg-indigo-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={handleUpdate}
             >
               Save
             </button>
-          </div>
+          </form>
         </div>
-      </form>
+      </div>
     </>
   );
 }

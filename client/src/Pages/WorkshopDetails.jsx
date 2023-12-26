@@ -48,7 +48,6 @@ function WorkshopDetails() {
           },
         ],
       }));
-      console.log("Enrollment Response:", enrollResponse.data);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -67,7 +66,6 @@ function WorkshopDetails() {
           `http://localhost:8080/elderlies/detail/${id}`
         );
         setWorkshopData(response.data);
-        console.log("API response:", response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -36,16 +36,11 @@ function Subscribe() {
 
             <div class="flex-1 xl:mx-8">
               <div class="mt-8 space-y-8 md:-mx-4 md:flex md:items-center md:justify-center md:space-y-0 xl:mt-0">
-                <div class="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
+                <div class="w-full border rounded-lg md:mx-4 dark:border-gray-700">
                   <div class="p-6">
                     <h1 class="text-xl font-medium text-gray-700 capitalize lg:text-3xl dark:text-white">
                       Free
                     </h1>
-
-                    <p class="mt-4 text-gray-500 dark:text-gray-300">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Nostrum quam voluptatibus
-                    </p>
 
                     <h2 class="mt-4 text-2xl font-medium text-gray-700 sm:text-4xl dark:text-gray-300">
                       $0.00 <span class="text-base font-medium">/Month</span>
@@ -148,16 +143,11 @@ function Subscribe() {
                   </div>
                 </div>
 
-                <div className="max-w-sm mx-auto border rounded-lg md:mx-4 dark:border-gray-700">
+                <div className="w-full border rounded-lg md:mx-4 dark:border-gray-700">
                   <div className="p-6">
                     <h1 className="text-xl font-medium text-gray-700 capitalize lg:text-3xl dark:text-white">
                       Premium
                     </h1>
-
-                    <p className="mt-4 text-gray-500 dark:text-gray-300">
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                      Nostrum quam voluptatibus
-                    </p>
 
                     <h2 className="mt-4 text-2xl font-medium text-gray-700 sm:text-4xl dark:text-gray-300">
                       $70.00{" "}

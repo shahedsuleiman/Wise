@@ -233,7 +233,7 @@ function CoursesTable() {
                           <tr
                             key={index}
                             className={`w-full ${
-                              index % 2 !== 0 ? "bg-white" : "bg-[#F7F1EE]"
+                              index % 2 !== 0 ? "bg-white" : "bg-[#d5c5df]"
                             }`}
                             style={{ width: "100%" }}
                           >

@@ -130,7 +130,7 @@ function Techtips() {
                     onClick={() => setShowCreateModal(true)}
                     className="bg-indigo-950 h-10 w-40 text-white  rounded-md ml-2 hover:bg-indigo-900"
                   >
-                    Create Course
+                    Create Techtip
                   </button>
                 </div>
               </div>
@@ -182,7 +182,7 @@ function Techtips() {
                           <tr
                             key={index}
                             className={
-                              index % 2 !== 0 ? "bg-white" : "bg-[#F7F1EE]"
+                              index % 2 !== 0 ? "bg-white" : "bg-[#d5c5df]"
                             }
                           >
                             <td class="py-3 ps-4">

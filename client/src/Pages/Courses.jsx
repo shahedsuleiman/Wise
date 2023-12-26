@@ -94,7 +94,9 @@ const Courses = () => {
               >
                 <div className="mb-4 md:mb-0 md:mr-4 flex items-center text-2xl text-indigo-950">
                   {course.start_time && (
-                    <div>{formatDate(course.start_time)}</div>
+                    <div className="bg-[#d5c5df] w-full h-full flex items-center pl-4 justify-center rounded-lg">
+                      {formatDate(course.start_time)}
+                    </div>
                   )}
                 </div>
                 <img

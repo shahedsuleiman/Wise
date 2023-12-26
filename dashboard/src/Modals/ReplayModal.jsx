@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const ReplyModal = ({ onClose, onUpdateAnswer }) => {
+const ReplyModal = ({ closeModal, onUpdateAnswer }) => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
@@ -18,7 +18,7 @@ const ReplyModal = ({ onClose, onUpdateAnswer }) => {
 
       // Assuming the API call was successful, update the answer in the table
       onUpdateAnswer(response.data); // Update with the actual response from the server
-      onClose(); // Close the modal after successful submission
+      closeModal(); // Close the modal after successful submission
     } catch (error) {
       // Handle error scenarios here
       console.error("Error submitting reply:", error);
@@ -71,7 +71,7 @@ const ReplyModal = ({ onClose, onUpdateAnswer }) => {
           </button>
           <button
             className="bg-white border border-solid border-indigo-950 text-indigo-950 px-4 py-2 rounded-md"
-            onClick={onClose}
+            onClick={closeModal}
           >
             Close
           </button>

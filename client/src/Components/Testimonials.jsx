@@ -13,7 +13,6 @@ function Testimonials() {
       .then((response) => {
         if (response.data.success) {
           setTestimonials(response.data.testimonials);
-          console.log("Testimonials data:", response.data.testimonials);
         } else {
           console.error("Failed to fetch testimonials.");
         }
@@ -24,9 +23,6 @@ function Testimonials() {
   }, []);
 
   useEffect(() => {
-    console.log("sliderRef:", sliderRef.current);
-    console.log("testimonials:", testimonials);
-
     if (sliderRef.current && testimonials.length > 0) {
       const keenSlider = new KeenSlider(sliderRef.current, {
         loop: true,

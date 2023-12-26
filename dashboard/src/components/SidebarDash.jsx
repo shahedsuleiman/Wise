@@ -27,7 +27,7 @@ function SidebarDash() {
         <div class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
           <div
             class="flex flex-col flex-grow  overflow-y-auto "
-            style={{ backgroundColor: "#F7F1EE " }}
+            style={{ backgroundColor: "#d5c5df" }}
           >
             <div class="flex items-center flex-shrink-0 px-2">
               <img class="h-25 w-45" src={logo2} alt="WiseAssist" />
@@ -35,7 +35,7 @@ function SidebarDash() {
             <hr />
             <div
               class=" flex-1 flex flex-col "
-              style={{ backgroundColor: "#F7F1EE " }}
+              style={{ backgroundColor: "#d5c5df" }}
             >
               <nav
                 className={`${
@@ -47,7 +47,7 @@ function SidebarDash() {
                   ${
                     activeTab === "dashboard"
                       ? "bg-indigo-950 text-white"
-                      : "#F7F1EE"
+                      : "#d5c5df"
                   }`}
                 >
                   Dashboard
@@ -58,7 +58,7 @@ function SidebarDash() {
                   ${
                     activeTab === "users"
                       ? "bg-indigo-950 text-white"
-                      : "#F7F1EE"
+                      : "#d5c5df"
                   }`}
                   onClick={() => setActiveTab("users")}
                 >
@@ -70,7 +70,7 @@ function SidebarDash() {
                    ${
                      activeTab === "courses"
                        ? "bg-indigo-950 text-white"
-                       : "#F7F1EE"
+                       : "#d5c5df"
                    }`}
                   onClick={() => setActiveTab("courses")}
                 >
@@ -82,7 +82,7 @@ function SidebarDash() {
                   ${
                     activeTab === "workshops"
                       ? "bg-indigo-950 text-white"
-                      : "#F7F1EE"
+                      : "#d5c5df"
                   }`}
                   onClick={() => setActiveTab("workshops")}
                 >
@@ -94,7 +94,7 @@ function SidebarDash() {
                   ${
                     activeTab === "techtips"
                       ? "bg-indigo-950 text-white"
-                      : "#F7F1EE"
+                      : "#d5c5df"
                   }`}
                   onClick={() => setActiveTab("techtips")}
                 >
@@ -117,14 +117,12 @@ function SidebarDash() {
           </div>
         </div>
         <div class="md:pl-64 flex flex-col flex-1">
-          {/* <div class=" top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow"> */}
           <button
             className="md:hidden fixed bottom-5 right-5 z-50 p-3 bg-indigo-950 text-white rounded"
             onClick={toggleSidebar}
           >
             {showSidebar ? "Close" : "Menu"}
 
-            {/* Toggle icon */}
             <svg
               className="h-6 w-6 ml-2"
               xmlns="http://www.w3.org/2000/svg"
@@ -165,11 +163,6 @@ function SidebarDash() {
                 {activeTab === "courses" && <CoursesTable />}
                 {activeTab === "workshops" && <Workshops />}
                 {activeTab === "techtips" && <Techtips />}
-                {/* <Stats />
-                <Users />
-                <CoursesTable />
-                <Workshops />
-                <Techtips /> */}
               </div>
             </div>
           </main>

@@ -180,7 +180,7 @@ function Users() {
                   {filteredUsers.map((user, index) => (
                     <tr
                       key={index}
-                      className={index % 2 !== 0 ? "bg-white" : "bg-[#F7F1EE]"}
+                      className={index % 2 !== 0 ? "bg-white" : "bg-[#d5c5df]"}
                     >
                       <td class="py-3 ps-4">
                         <div class="flex items-center h-5"></div>

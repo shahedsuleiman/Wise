@@ -7,7 +7,7 @@ import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
-import SignUpWithGoogle from "../Components/SignUpWithGoogle";
+import GoolgeSignInButton from "../Components/GoogleSignup";
 
 function RegisterPage() {
   const [cookies, setCookie] = useCookies(["token"]);
@@ -75,7 +75,7 @@ function RegisterPage() {
   return (
     <>
       <div
-        className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 "
+        className="min-h-full flex items-center justify-center mt-12 py-12 px-4 sm:px-6 lg:px-8 "
         style={{
           backgroundImage: `url(${background})`,
           backgroundSize: "cover",
@@ -266,7 +266,7 @@ function RegisterPage() {
                       </span>
                     </button>
                   </form>
-                  <SignUpWithGoogle />
+                  <GoolgeSignInButton />
                 </div>
               </div>
             </div>

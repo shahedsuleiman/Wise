@@ -8,16 +8,16 @@ import hero1 from "../assets/hero.png";
 function Hero() {
   const partners = [
     {
-      title: "  328",
-      company: "  Great Achievements",
+      title: "  100+",
+      company: "Courses Available",
     },
     {
-      title: " 16",
-      company: " Graduations sponsored",
+      title: " 70+",
+      company: "Workshops Conducted",
     },
     {
-      title: "16",
-      company: " Graduations sponsored",
+      title: "200+",
+      company: "Tech Tips Shared",
     },
   ];
 
@@ -73,7 +73,7 @@ function Hero() {
                   {partners.map((partner, index) => (
                     <div
                       key={index}
-                      className="relative overflow-hidden rounded-xl border-4 border-indigo-900 bg-white shadow"
+                      className="relative overflow-hidden rounded-xl border-4 border-[#522883] mr-4 bg-white shadow"
                     >
                       <div className="py-10 px-6">
                         <div className="flex items-center">
@@ -91,8 +91,8 @@ function Hero() {
               </div>
             </div>
           </div>
-          <div className="relative text-indigo-900 lg:ml-32 lg:w-1/2 hidden lg:block">
-            <div className="border-b-8 border-b-indigo-900 max-w-lg mx-auto mb-10">
+          <div className="relative text-[#522883] lg:ml-32 lg:w-1/2 hidden lg:block">
+            <div className="border-b-8 border-b-[#522883] max-w-lg mx-auto mb-10">
               <img
                 className="w-full h-full object-cover sm:object-contain"
                 src={hero1}

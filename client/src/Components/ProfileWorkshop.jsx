@@ -17,16 +17,13 @@ function ProfileWorkshop() {
           console.error("Token not available.");
           return;
         }
-        console.log(id);
 
         axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.get(
           `http://localhost:8080/profile/myworkshops`
         );
         if (Array.isArray(response.data.courses)) {
-          // Check if response.data is an array
           setUserWorkshop(response.data.courses);
-          console.log("User Workshop:", response.data.courses);
         } else {
           console.error(
             "Data received is not an array:",
@@ -34,7 +31,6 @@ function ProfileWorkshop() {
           );
         }
         setUserWorkshop(response.data.courses);
-        console.log("User Workshop:", response.data.courses);
       } catch (error) {
         console.error("Error fetching user courses:", error);
       }
@@ -45,62 +41,47 @@ function ProfileWorkshop() {
   return (
     <>
       <div className="relative items-end justify-center flex-col border-[1px] border-gray-200 bg-white bg-clip-border shadow-md dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none">
-        <div className="p-4">
-          <h4 className="text-xl font-bold text-navy-700 dark:text-white">
+        <div className="container mx-auto px-4 py-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-6">
             All Workshops
-          </h4>
-        </div>
-        <div className="flex flex-col gap-4">
-          {Array.isArray(userWorkshops) && userWorkshops.length > 0 ? (
-            userWorkshops.map((workshop) => (
-              <div
-                key={workshop.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded shadow-md dark:border-[#ffffff33]"
-              >
-                <div className="flex items-center">
-                  <div>
-                    <img
-                      className="h-[83px] w-[83px] rounded-lg"
-                      src={workshop.image}
-                      alt=""
-                    />
-                  </div>
-                  <div className="ml-4">
-                    <Link to={`/workshopsDetail/${workshop.id}`}>
-                      <p className="text-base font-medium text-navy-700 dark:text-white">
-                        {workshop.title}
-                      </p>
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
+            {userWorkshops.length > 0 ? (
+              userWorkshops.map((workshop) => (
+                <div
+                  key={workshop.id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden"
+                >
+                  <img
+                    className="w-full h-40 object-cover object-center"
+                    src={workshop.image}
+                    alt={workshop.title}
+                  />
+                  <div className="p-4">
+                    <Link
+                      to={`/workshopsDetail/${workshop.id}`}
+                      className="text-xl font-semibold text-gray-800 hover:text-indigo-700 transition duration-300"
+                    >
+                      {workshop.title}
                     </Link>
-                    <p className="mt-2 text-sm text-gray-600">
-                      {workshop.description}.
+                    <p className="text-sm text-gray-600 mt-2">
+                      {workshop.description}
                     </p>
-                    <p className="text-base font-medium text-navy-700 dark:text-white">
-                      {workshop.start_time}
-                    </p>
-                    <p className="text-base font-medium text-navy-700 dark:text-white">
-                      {workshop.end_time}
-                    </p>
+                    <div className="flex justify-between mt-4">
+                      <p className="text-sm text-gray-700">
+                        Start Time: {workshop.start_time}
+                      </p>
+                      <p className="text-sm text-gray-700">
+                        End Time: {workshop.end_time}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center text-gray-600">
-                  <svg
-                    stroke="currentColor"
-                    fill="currentColor"
-                    strokeWidth={0}
-                    viewBox="0 0 24 24"
-                    height="1em"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41z" />
-                  </svg>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No courses available</p>
-          )}
+              ))
+            ) : (
+              <p>No workshops available</p>
+            )}
+          </div>
         </div>
       </div>
     </>

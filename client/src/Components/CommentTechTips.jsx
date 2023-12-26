@@ -14,14 +14,12 @@ function CommentTechTips({ techtipsId }) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        console.log("TechTip Id :", id);
         axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.get(
           `http://localhost:8080/techtip/${id}/getcomments`
         );
 
         setComments(response.data);
-        console.log("API response:", response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -78,7 +76,7 @@ function CommentTechTips({ techtipsId }) {
           </div>
           <button
             type="submit"
-            class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+            class="px-4 py-3 text-indigo-950 transition-all rounded-lg transform border border-indigo-950 hover:bg-indigo-950  hover:text-gray-100"
           >
             Post comment
           </button>
@@ -87,12 +85,12 @@ function CommentTechTips({ techtipsId }) {
           commentData.comments.map((comment) => (
             <article
               key={comment.id}
-              className="p-6 text-base bg-white rounded-lg dark:bg-gray-900"
+              className="p-6 text-base bg-[#d5c5df] rounded-lg dark:bg-gray-900"
             >
               <footer className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
                   <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
-                    <img className="mr-2 w-6 h-6 rounded-full" alt="" />
+                    {comment.user_name}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400"></p>
                 </div>
@@ -113,72 +111,11 @@ function CommentTechTips({ techtipsId }) {
                   </svg>
                   <span class="sr-only">Comment settings</span>
                 </button>
-
-                <div
-                  id="dropdownComment1"
-                  class="hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
-                >
-                  <ul
-                    class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownMenuIconHorizontalButton"
-                  >
-                    <li>
-                      <a
-                        href="/"
-                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Edit
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/"
-                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Remove
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/"
-                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Report
-                      </a>
-                    </li>
-                  </ul>
-                </div>
               </footer>
 
-              {/* <p className="text-gray-500 dark:text-gray-400">
-                {comment.user_name}
-              </p> */}
               <p className="text-gray-500 dark:text-gray-400">
                 {comment.comment}
               </p>
-              <div class="flex items-center mt-4 space-x-4">
-                <button
-                  type="button"
-                  class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium"
-                >
-                  <svg
-                    class="mr-1.5 w-3.5 h-3.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-                    />
-                  </svg>
-                  Reply
-                </button>
-              </div>
             </article>
           ))
         ) : (

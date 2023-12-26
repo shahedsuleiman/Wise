@@ -28,10 +28,10 @@ import Contact from "./Pages/Contact";
 import Contactus from "./Pages/Contactus";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
-// import ProtectedRoute from "./Components/ProtectedRoute";
+
 import { useAuth } from "./Context/AuthContext";
 function App() {
-  const { isLoggedIn, isSubscribed } = useAuth();
+  const { isLoggedIn } = useAuth();
   return (
     <div className="App">
       <header className="App-header">
@@ -52,13 +52,10 @@ function App() {
             ) : (
               <Route path="/profile" element={<LoginPage />} />
             )}
-            {/* {isSubscribed ? ( */}
+
             <>
               <Route path="/techtips" element={<Techtip />} />
             </>
-            {/* ) : (
-              <Route path="/techtips" element={<NotFound />} />
-            )} */}
 
             <Route path="/TipDetail/:id" element={<TipDetail />} />
             <Route path="/contact" element={<Contact />} />
