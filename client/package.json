@@ -27,7 +27,7 @@
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.10.1",
     "swiper": "^11.0.5",
-    "tw-elements": "^1.0.0",
+    "tw-elements": "^1.1.0",
     "use-places-autocomplete": "^4.0.1",
     "web-vitals": "^2.1.4"
   },

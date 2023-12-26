@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import contact from "../assets/contact.jpg";
+
 import { motion } from "framer-motion";
 import SearchBar from "../Components/SearchBar";
 import { Link } from "react-router-dom";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
-import { useNavigate } from "react-router-dom";
+
 import FilterWorkshop from "../Components/FilterWorkshop";
 import Pagination from "../Components/Pagination";
 
@@ -92,7 +90,6 @@ function Workshops() {
 
   return (
     <>
-      <Header />
       <SearchBar onSearch={filterWorkshops} />
       <FilterWorkshop filterByDate={filterByDate} filterByType={filterByType} />
       <main className="md:px-20  justify-center items-center sm:px-14 px-6 flex flex-col ">
@@ -111,7 +108,7 @@ function Workshops() {
               }}
               class="container mx-auto p-4 md:p-0 "
             >
-              <div class="relative mx-auto rounded-full  bg-white bg-opacity-20 bg-cover bg-center w-full mb-5 md:max-w-screen-lg">
+              <div class="relative mx-auto rounded-md  bg-white bg-opacity-20 bg-cover bg-center w-full mb-5 md:max-w-screen-lg">
                 <img
                   class="absolute h-full w-full object-cover"
                   src={workshop.image}
@@ -122,12 +119,10 @@ function Workshops() {
                     <p class="mb-4 font-serif font-light">
                       {workshop.start_time}
                     </p>
-                    <h2 class="font-serif text-4xl font-bold">
+                    <h2 class="font-serif text-3xl font-bold">
                       {workshop.title}
                     </h2>
-                    {/* <p className="text-white mb-2 md:mb-6">
-                      {workshop.description}
-                    </p> */}
+
                     <p className="text-white mb-2 md:mb-6">
                       {workshop.category}
                     </p>
@@ -162,7 +157,6 @@ function Workshops() {
           handlePageChange={handlePageChange}
         />
       </main>
-      <Footer />
     </>
   );
 }

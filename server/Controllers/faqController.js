@@ -25,7 +25,7 @@ const addquestion = async (req, res) => {
 const allansweredquestions = async (req, res, next) => {
   try {
     console.log("hi");
-    const question = await FAQ.allansweredquestions();
+    const question = await FAQ.allfaq();
 
     res.status(200).json(question);
   } catch (err) {

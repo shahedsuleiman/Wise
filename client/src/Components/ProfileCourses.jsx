@@ -66,7 +66,13 @@ function ProfileCourses() {
                     />
                   </div>
                   <div className="ml-4">
-                    <Link to={`/courseDetails/${course.id}`}>
+                    <Link
+                      to={
+                        course.category.toLowerCase() === "online"
+                          ? `/courseDetails/${course.id}`
+                          : `/onsiteCourseDetails/${course.id}`
+                      }
+                    >
                       <p className="text-base font-medium text-navy-700 dark:text-white">
                         {course.title}
                       </p>

@@ -40,14 +40,19 @@ function Users() {
     try {
       console.log("Toggling user block status for user ID:", userId);
       console.log("Is Deleted:", isDeleted);
-      const updatedUserData = { ...selectedUser, is_deleted: !isDeleted };
+      const updatedUserData = { ...users.find((user) => user.id === userId) }; // Find user data by ID
+      updatedUserData.is_deleted = !isDeleted; // Update block status
+
       const response = await axios.put(
         `http://localhost:8080/dashboard/deleteuser/${userId}`,
         updatedUserData
       );
 
       if (response.status === 200) {
-        updateUser(updatedUserData);
+        const updatedUsers = users.map((user) =>
+          user.id === userId ? updatedUserData : user
+        );
+        setUsers(updatedUsers); // Update users state with the modified user
       }
     } catch (error) {
       console.error("Error toggling user block status: ", error);

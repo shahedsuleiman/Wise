@@ -52,7 +52,7 @@ function Pagination({
               onClick={() => paginate(number)}
               className={`${
                 currentPage === number
-                  ? "bg-[#fcf2fc] w-10 rounded-full border border-solid border-indigo-950 text-indigo-950"
+                  ? "bg-[#d5c5df] w-10 rounded-full border border-solid border-indigo-950 text-indigo-950"
                   : "border border-solid border-indigo-950 w-10 rounded-full text-indigo-950"
               } py-2 px-3 rounded-full focus:outline-none`}
             >

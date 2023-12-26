@@ -41,6 +41,20 @@ Profile.profilepicture = async (userID, imageUrl) => {
   }
 };
 
+Profile.isenrolled = async (userID, courseID) => {
+  try {
+    const checkEnrollmentQuery =
+      "SELECT * FROM course_attendances WHERE user_id = $1 AND course_id = $2";
+    const checkEnrollmentResult = await db.query(checkEnrollmentQuery, [
+      userID,
+      courseID,
+    ]);
+    return checkEnrollmentResult.rows.length > 0;
+  } catch (err) {
+    throw err;
+  }
+};
+
 Profile.reginfreecourse = async (userID, courseID) => {
   try {
     const registerQuery =

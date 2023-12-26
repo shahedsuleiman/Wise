@@ -1,25 +1,42 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { useCookies } from "react-cookie";
+import Pagination from "../Components/Pagination";
+
 function Techtip() {
   const [cookies] = useCookies(["token"]);
   const token = cookies.Token;
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    <></>;
-  }, []);
   const [posts, setPosts] = useState([]);
+  const [filteredTechtips, setFilteredTechtips] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 6;
 
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  //   <></>;
+  // }, []);
+
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  useEffect(() => {
+    document.body.style.scrollBehavior = "smooth";
+    return () => {
+      document.body.style.scrollBehavior = "unset";
+    };
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
         axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.get("http://localhost:8080/alltechtips");
         setPosts(response.data);
+        setFilteredTechtips(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -27,12 +44,27 @@ function Techtip() {
 
     fetchData();
   }, []);
+
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+
+  const currentCards = filteredTechtips.slice(
+    indexOfFirstCard,
+    indexOfLastCard
+  );
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
   return (
     <>
-      <Header />
       <div
         class="text-gray-900 pt-12 pr-0 pb-14 pl-0 w-full "
-        style={{ backgroundColor: "#F7F1EE " }}
+        style={{ backgroundColor: "#d5c5df " }}
       >
         <div class="w-full pt-4 pr-5 pb-6 pl-5 mt-0 mr-auto mb-0 ml-auto space-y-5 sm:py-8 md:py-12 sm:space-y-8 md:space-y-16 max-w-7xl">
           <div class="flex flex-col items-center sm:px-5 md:flex-row">
@@ -71,85 +103,62 @@ function Techtip() {
           </div>
         </div>
       </div>
-
-      <div class="max-w-screen-xl mx-auto p-16">
-        <div class="sm:grid lg:grid-cols-3 sm:grid-cols-2 gap-10">
-          {posts.map((post, index) => (
-            <div
-              key={index}
-              class="hover:bg-indigo-950 hover:text-white transition duration-300 max-w-sm rounded overflow-hidden border border-solid shadow-lg"
-            >
-              <div class="py-4 px-8">
-                <Link to={`/TipDetail/${post.id}`}>
-                  <button>
-                    <h4 class="text-lg mb-3 font-semibold">{post.title}</h4>
-                  </button>{" "}
-                </Link>
-            
-                <img src={post.image} class="w-full h-60" alt="" />
-                <hr class="mt-4" />
-                <span class="text-xs">ARTICLE</span>
-                &nbsp;<span class="text-xs text-gray-500">PROCESS</span>
-              </div>
+      <section class="text-gray-600 body-font">
+        <div class="container px-5 py-24 mx-auto max-w-7x1">
+          <div class="flex flex-wrap w-full mb-4 p-4">
+            <div class="w-full mb-6 lg:mb-0">
+              <h1 class="sm:text-4xl text-5xl font-medium font-bold title-font mb-2 text-gray-900">
+                News
+              </h1>
+              <div class="h-1 w-20 bg-[#522883] rounded"></div>
             </div>
-          ))}
-        </div>
-      </div>
-      {/* 
-
-      <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
-          {posts.map((post, index) => (
-            <a
-              class="group rounded-xl  overflow-hidden dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-              href="/"
-            >
-              <div
-                key={index}
-                class="relative pt-[50%] sm:pt-[70%] rounded-xl overflow-hidden"
-              >
-                <img
-                  class="w-full h-full absolute top-0 start-0 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out rounded-xl"
-                  src={post.image}
-                  alt="Im"
-                />
+          </div>
+          <div data-aos="fade-up" class="flex flex-wrap -m-4 mb-6">
+            {currentCards.length > 0 ? (
+              currentCards.map((post, index) => (
+                <div
+                  key={index}
+                  class="xl:w-1/3 lg:w-1/2 md:w-1/2 sm:w-1/2 w-full p-2"
+                >
+                  <div class="bg-[#d5c5df] p-6 rounded-lg border border-solid shadow-lg min-h-[400px] lg:min-h-[450px] transform hover:scale-105 transition duration-500">
+                    <img
+                      class="h-64 lg:h-48 md:h-48 sm:h-48 w-full object-cover object-center mb-4 rounded-lg transform hover:scale-100 transition duration-500"
+                      src={post.image}
+                      alt="Image_Size"
+                    />
+                    <Link to={`/TipDetail/${post.id}`}>
+                      <button>
+                        <h2 class="tracking-widest text-[#522883] text-xl font-medium text-left title-font mb-2 lg:mb-3">
+                          {post.title}
+                        </h2>
+                      </button>
+                    </Link>
+                    <p class="leading-relaxed text-sm">{post.short_detail}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center w-full my-4">
+                <div className="bg-[#d5c5df] rounded-lg p-4 border border-solid">
+                  <p className="text-base text-indigo-950 mb-2">
+                    No Techtips found.
+                  </p>
+                  <p className="text-xs text-indigo-950">
+                    Please try a different keyword or check back later.
+                  </p>
+                </div>
               </div>
-
-              <div class="mt-7">
-                <h3 class="text-xl font-semibold text-gray-800 group-hover:text-gray-600 dark:text-gray-200">
-                  {post.title}
-                </h3>
-                <p class="mt-3 text-gray-800 dark:text-gray-200">
-                  {post.short_detail}
-                </p>
-                <p class="mt-5 inline-flex items-center gap-x-1 text-blue-600 decoration-2 group-hover:underline font-medium">
-                  <Link to={`/TipDetail`}>
-                    <button class="mt-6 inline-block rounded-xl border-2 px-10 py-3 font-semibold border-white hover:bg-white hover:text-indigo-950">
-                      {" "}
-                      Read Now{" "}
-                    </button>
-                  </Link>
-                  <svg
-                    class="flex-shrink-0 w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </p>
-              </div>
-            </a>
-          ))}
+            )}
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            cardsPerPage={cardsPerPage}
+            totalCards={filteredTechtips.length}
+            paginate={paginate}
+            handlePageChange={handlePageChange}
+          />
         </div>
-      </div> */}
-      <Footer />
+      </section>
     </>
   );
 }

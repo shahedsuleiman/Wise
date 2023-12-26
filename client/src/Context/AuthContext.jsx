@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(true);
     setHeaders({ token: Token });
   };
+
   const register = (Token) => {
     setIsRegistered(true);
     setHeaders({ token: Token });

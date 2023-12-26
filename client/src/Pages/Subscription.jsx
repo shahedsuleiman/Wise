@@ -6,8 +6,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Components/CheckoutForm";
 import "../style.css";
-// import "./styles.css";
-// import CheckoutForm from "./CheckoutForm";
 
 function Subscription() {
   useEffect(() => {
@@ -20,7 +18,6 @@ function Subscription() {
 
   return (
     <>
-      <Header />
       <div class="relative text-gray-900 pt-12 pr-0 pb-14 pl-0 w-full bg-indigo-950 flex items-center justify-center ">
         <div class="w-full pt-4 pr-5 pb-6 pl-5 mt-0 mr-auto mb-0 ml-auto space-y-5 sm:py-8 md:py-12 sm:space-y-8 md:space-y-16 max-w-7xl">
           <div class="flex flex-col items-center sm:px-5 md:flex-row">
@@ -61,7 +58,6 @@ function Subscription() {
           </Elements>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

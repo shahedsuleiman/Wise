@@ -20,8 +20,6 @@ function Profile() {
 
   return (
     <>
-      <Header />
-
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
       <link
@@ -90,8 +88,6 @@ function Profile() {
           {activeTab === "pass" && <ProfilePass />}
         </div>
       </div>
-
-      <Footer />
     </>
   );
 }

@@ -7,7 +7,6 @@ import "slick-carousel/slick/slick-theme.css";
 
 function RecentWorkshops() {
   const [workshops, setWorkshops] = useState([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const CustomPrevArrow = ({ onClick }) => (
     <button
@@ -61,8 +60,8 @@ function RecentWorkshops() {
     speed: 2500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    // autoplay: true,
-    // autoplaySpeed: 5000,
+    autoplay: true,
+    autoplaySpeed: 5000,
     prevArrow: <CustomPrevArrow />,
     nextArrow: <CustomNextArrow />,
   };
@@ -85,6 +84,18 @@ function RecentWorkshops() {
 
   return (
     <>
+      <div className="mt-20 my-8 lg:my-18 container px-6 mx-auto flex flex-col md:flex-row items-start md:items-center justify-between pb-4 border-b border-gray-300">
+        <div>
+          <h3 className="font_heading text-4xl  leading-tight text-[#522883] dark:text-gray-100">
+            Check our Recent Workshops
+          </h3>
+        </div>
+        <div className="mt-6  px-6 md:mt-0">
+          <button className="linear rounded-[20px] bg-indigo-950 px-4 py-2 text-base font-medium text-white transition duration-200 hover:bg-indigo-900 active:bg-brand-700">
+            View All
+          </button>
+        </div>
+      </div>
       <section>
         <Slider {...settings}>
           {workshops.map((workshop, index) => (

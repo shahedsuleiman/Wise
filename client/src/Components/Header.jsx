@@ -27,7 +27,7 @@ function Header() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 py-2.5 dark:bg-gray-900 w-full">
-        <div class="flex  justify-between  px-4 mx-auto">
+        <div class="flex justify-between px-4 mx-auto flex-wrap lg:flex-nowrap">
           <a href="/" class="flex items-center">
             <img
               src={logo2}
@@ -36,6 +36,7 @@ function Header() {
             />
           </a>
           <div class="flex items-center lg:order-2">
+            {" "}
             <div
               className={`${
                 isLoggedIn ? "hidden" : "flex"
@@ -58,7 +59,6 @@ function Header() {
                 </button>
               </Link>
             </div>
-
             {/* <Link to="/profile"> */}
             <div className="relative">
               <button
@@ -140,9 +140,8 @@ function Header() {
               </svg>
             </button>
           </div>
-
           <div
-            className={`lg:flex lg:items-center ${
+            className={`w-full lg:w-auto lg:flex lg:items-center ${
               isMobileMenuOpen ? "block" : "hidden"
             }`}
             id="mobile-menu-2"

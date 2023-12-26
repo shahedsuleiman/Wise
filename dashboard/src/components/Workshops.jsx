@@ -4,6 +4,8 @@ import deletee from "../Assets/delete.png";
 import edit from "../Assets/edit.png";
 import CreateWorkshop from "../Modals/CreateWorkshop";
 import WorkshopModal from "../Modals/WorkshopModal";
+import attendance from "../Assets/people.png";
+import AttendancesModal from "../Modals/AttendancesModal";
 // import { useAuth } from "../Context/AuthContext";
 // import { useCookies } from "react-cookie";
 
@@ -30,6 +32,7 @@ function Workshops() {
   const [showModal, setShowModal] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   // const token = cookies.Token;
   // const { headers } = useAuth();
   const [page, setPage] = useState(1); // Current page
@@ -88,6 +91,13 @@ function Workshops() {
 
     setWorkshops(updatedWorkshops);
   };
+
+  const attendanceCourse = (selectedCourse) => {
+    setSelectedWorkshop(selectedCourse);
+    setShowAttendanceModal(
+      (prevShowAttendanceModal) => !prevShowAttendanceModal
+    );
+  };
   return (
     <>
       {" "}
@@ -135,7 +145,7 @@ function Workshops() {
                     onClick={() => setShowCreateModal(true)}
                     className="bg-indigo-950 h-10 w-40 text-white  rounded-md ml-2 hover:bg-indigo-900"
                   >
-                    Create Course
+                    Create WorkShop
                   </button>
                 </div>
               </div>
@@ -260,6 +270,16 @@ function Workshops() {
                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                               <button
                                 type="button"
+                                onClick={() => attendanceCourse(workshop)}
+                              >
+                                <img
+                                  className="h-6 w-6"
+                                  src={attendance}
+                                  alt=""
+                                />
+                              </button>
+                              <button
+                                type="button"
                                 onClick={() => openModal(workshop)}
                                 class="inline-flex mr-2 items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                               >
@@ -294,6 +314,14 @@ function Workshops() {
                     addWorkshop={createWorkshop}
                     closeModal={() => setShowCreateModal(false)}
                     addedWorkshop={setCreatedWorkshop}
+                  />
+                )}
+
+                {showAttendanceModal && (
+                  <AttendancesModal
+                    course={selectedWorkshop}
+                    closeModal={() => setShowAttendanceModal(false)}
+                    getAttendances={attendanceCourse}
                   />
                 )}
               </div>

@@ -3,9 +3,11 @@ import axios from "axios";
 import deletee from "../Assets/delete.png";
 import detail from "../Assets/detail.png";
 import edit from "../Assets/edit.png";
+import attendance from "../Assets/people.png";
 import UpdateCourseModal from "../Modals/CourseModal";
 import CreateCourse from "../Modals/CreateCourse";
 import CourseModal from "../Modals/CourseModal";
+import AttendancesModal from "../Modals/AttendancesModal";
 import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 
@@ -34,6 +36,8 @@ function CoursesTable() {
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
+
   const token = cookies.Token;
   const { headers } = useAuth();
   const [page, setPage] = useState(1); // Current page
@@ -73,10 +77,9 @@ function CoursesTable() {
   const openModal = (course) => {
     setSelectedCourse(course);
     setShowModal(true);
-    console.log("Modal is opened"); // Log to check if this function runs
+    console.log("Modal is opened");
   };
 
-  // Function to close modal
   const closeModal = () => {
     setShowModal(false);
     setSelectedCourse(null);
@@ -88,6 +91,13 @@ function CoursesTable() {
     );
 
     setCourses(updatedCourses);
+  };
+
+  const attendanceCourse = (selectedCourse) => {
+    setSelectedCourse(selectedCourse);
+    setShowAttendanceModal(
+      (prevShowAttendanceModal) => !prevShowAttendanceModal
+    );
   };
 
   return (
@@ -264,6 +274,16 @@ function CoursesTable() {
                             <td class="px-6 py-4 w-1/8 h-20 text-end whitespace-nowrap  text-sm font-medium ">
                               <button
                                 type="button"
+                                onClick={() => attendanceCourse(course)}
+                              >
+                                <img
+                                  className="h-6 w-6"
+                                  src={attendance}
+                                  alt=""
+                                />
+                              </button>
+                              <button
+                                type="button"
                                 onClick={() => openModal(course)}
                               >
                                 <img
@@ -300,6 +320,13 @@ function CoursesTable() {
                     addcourse={createCourse}
                     closeModal={() => setShowCreateModal(false)} // Close modal function
                     addedCourse={setCreatedCourse}
+                  />
+                )}
+                {showAttendanceModal && (
+                  <AttendancesModal
+                    course={selectedCourse}
+                    closeModal={() => setShowAttendanceModal(false)}
+                    getAttendances={attendanceCourse}
                   />
                 )}
               </div>

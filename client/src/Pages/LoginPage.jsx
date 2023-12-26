@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import background from "../assets/background.png";
 import FormHeader from "../Components/FormHeader";
-import Header from "../Components/Header";
+
 import { useAuth } from "../Context/AuthContext";
 import SignUpWithGoogle from "../Components/SignUpWithGoogle";
 
@@ -16,6 +16,10 @@ const LoginPage = () => {
     password: "",
   });
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +58,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header />
       <div
         className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
         style={{

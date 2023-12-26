@@ -82,7 +82,6 @@ const Courses = () => {
   };
   return (
     <>
-      <Header />
       <CoursesSearch onSearch={filterCourses} />
       <FilterList filterByType={filterByType} />
       <section className="title container ">
@@ -101,7 +100,7 @@ const Courses = () => {
                 <img
                   src={course.image}
                   alt="Card "
-                  className="  w-full  md:w-1/4 mb-4 md:mb-0 md:mr-4 rounded-lg"
+                  className="  w-[280px] h-[290px] md:w-1/4 mb-4 md:mb-0 md:mr-4 rounded-lg"
                 />
                 <div className="md:w-3/4">
                   <h4 className="text-sm mb-2 text-indigo-950">
@@ -153,7 +152,6 @@ const Courses = () => {
           handlePageChange={handlePageChange}
         />
       </section>
-      <Footer />
     </>
   );
 };

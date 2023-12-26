@@ -1,36 +1,13 @@
 const db = require("../config");
 const FAQ = {};
 
-FAQ.addquestion = async (userID, question) => {
-  try {
-    const existingQuestion = await db.query(
-      "SELECT * FROM faq WHERE user_id = $1 AND question = $2",
-      [userID, question]
-    );
-
-    if (existingQuestion.rows.length > 0) {
-      throw new Error("Question already exists for this user");
-    }
-
-    const result = await db.query(
-      "INSERT INTO faq (user_id, question) VALUES ($1, $2) RETURNING *",
-      [userID, question]
-    );
-    return result.rows[0];
-  } catch (err) {
-    throw err;
-  }
-};
-
-FAQ.allansweredquestions = async () => {
+FAQ.allfaq = async () => {
   try {
     const result = await db.query(`
-      SELECT MIN(id) AS id, question, COUNT(*) AS question_count
+      SELECT faq.id,faq.question
       FROM faq
-      WHERE is_deletedq = false AND is_deleteda = false 
-      GROUP BY question
-      HAVING COUNT(*) > 1;
-      `);
+      WHERE is_deleted = false 
+    `);
 
     return result.rows;
   } catch (err) {
@@ -38,11 +15,11 @@ FAQ.allansweredquestions = async () => {
   }
 };
 
-FAQ.answer = async (questionID) => {
+FAQ.answer = async (faqID) => {
   try {
     const result = await db.query(
-      "select faq.id,faq.answer from faq where id = $1 and faq.is_deleteda = false",
-      [questionID]
+      "select faq.id,faq.answer from faq where id = $1 and faq.is_deleted= false",
+      [faqID]
     );
     return result.rows;
   } catch (err) {

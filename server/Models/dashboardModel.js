@@ -141,6 +141,7 @@ Dashboard.allworkshops = async (
             courses.id,
             courses.title,
             courses.description,
+            courses.detail,
             courses.trainer,
             REPLACE(courses.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image,
             categories.category,
@@ -288,23 +289,14 @@ Dashboard.updatecourse = async (
   detail,
   description,
   trainer,
-  start_time,
-  end_time,
+  starttime,
+  endtime,
   site
 ) => {
   try {
     const result = await db.query(
       "UPDATE courses SET title = $2, detail = $3, description = $4, trainer = $5, start_time = $6, end_time = $7, site = $8 WHERE id = $1 RETURNING *",
-      [
-        courseID,
-        title,
-        detail,
-        description,
-        trainer,
-        start_time,
-        end_time,
-        site,
-      ]
+      [courseID, title, detail, description, trainer, starttime, endtime, site]
     );
 
     return result.rows[0];
@@ -337,11 +329,11 @@ Dashboard.deleteuser = async (userID) => {
   }
 };
 
-Dashboard.createlesson = async (courseID, videoUrl, title) => {
+Dashboard.createlesson = async (courseID, videoUrl, title, imageUrl) => {
   try {
     const result = await db.query(
-      "INSERT INTO lesson (course_id,video,title) VALUES ($1, $2,$3) RETURNING *",
-      [courseID, videoUrl, title]
+      "INSERT INTO lesson (course_id,video,title,image) VALUES ($1, $2,$3,$4) RETURNING *",
+      [courseID, videoUrl, title, imageUrl]
     );
     return result.rows[0];
   } catch (error) {
@@ -353,20 +345,18 @@ Dashboard.createlesson = async (courseID, videoUrl, title) => {
 Dashboard.alllessons = async (courseID) => {
   try {
     const result = await db.query(
-      "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id LEFT JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
+      "SELECT lesson.id, lesson.title, REPLACE(lesson.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
       [courseID]
     );
 
     const formattedResult = await Promise.all(
       result.rows.map(async (row) => {
-        if (row.image) {
-          const imageRef = storage.bucket().file("images/" + row.image);
-          const [url] = await imageRef.getSignedUrl({
-            action: "read",
-            expires: "01-01-2500",
-          });
-          row.image = url;
-        }
+        const imageRef = storage.bucket().file("images/" + row.image);
+        const [url] = await imageRef.getSignedUrl({
+          action: "read",
+          expires: "01-01-2500",
+        });
+        row.image = url;
 
         return row;
       })
@@ -379,42 +369,10 @@ Dashboard.alllessons = async (courseID) => {
   }
 };
 
-Dashboard.lessonpage = async (lessonID) => {
-  try {
-    const queryResult = await db.query(
-      `
-        SELECT 
-          lesson.id,
-          lesson.title,
-          REPLACE(lesson.video, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/videos/', '') AS video,
-          lesson.description
-        FROM lesson
-        WHERE lesson.id = $1 and  lesson.is_deleted = false;
-      `,
-      [lessonID]
-    );
-    const formattedResult = await Promise.all(
-      queryResult.rows.map(async (row) => {
-        const videRef = storage.bucket().file("videos/" + row.video);
-        const [url] = await videRef.getSignedUrl({
-          action: "read",
-          expires: "01-01-2500",
-        });
-        row.video = url;
-
-        return row;
-      })
-    );
-    return formattedResult;
-  } catch (err) {
-    throw err;
-  }
-};
-
 Dashboard.uploadlessonimage = async (lessonID, imageUrl) => {
   try {
     const result = await db.query(
-      "INSERT INTO lesson_image (lesson_id, image) VALUES ($1, $2)",
+      "update INTO lesson_image (lesson_id, image) VALUES ($1, $2)",
       [lessonID, imageUrl]
     );
     return result.rows;
@@ -425,7 +383,7 @@ Dashboard.uploadlessonimage = async (lessonID, imageUrl) => {
 
 Dashboard.createtichtip = async (title, short_detail, detail, imageUrl) => {
   const result = await db.query(
-    "INSERT INTO techtips (title,short_detail,detail,image)  VALUES ($1, $2, $3,$4)",
+    "INSERT INTO techtips (title,short_detail,detail,image) VALUES ($1, $2, $3,$4)",
     [title, short_detail, detail, imageUrl]
   );
   return result.rows;
@@ -469,42 +427,6 @@ WHERE
   }
 };
 
-Dashboard.techtipdetail = async (techId) => {
-  try {
-    const queryResult = await db.query(
-      `
-        SELECT 
-            techtips.id,
-            techtips.title,
-            techtips.short_detail,
-            techtips.detail,
-            REPLACE(techtips.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image
-        FROM 
-            techtips
-        WHERE 
-            techtips.id = $1 and techtips.is_deleted = false;
-    `,
-      [techId]
-    );
-
-    const formattedResult = await Promise.all(
-      queryResult.rows.map(async (row) => {
-        const imageRef = storage.bucket().file("images/" + row.image);
-        const [url] = await imageRef.getSignedUrl({
-          action: "read",
-          expires: "01-01-2500",
-        });
-        row.image = url;
-
-        return row;
-      })
-    );
-    return formattedResult;
-  } catch (err) {
-    throw err;
-  }
-};
-
 Dashboard.updatetechtip = async (techId, title, short_detail, detail) => {
   try {
     const result = await db.query(
@@ -530,12 +452,34 @@ Dashboard.deletetechtip = async (techId) => {
   }
 };
 
-Dashboard.allquestions = async (page, pageSize) => {
+Dashboard.allfaq = async (page, pageSize) => {
   try {
     const offset = (page - 1) * pageSize;
     const result = await db.query(
-      "SELECT faq.id,users.user_name ,faq.question,faq.answer from faq  inner join  users on users.id = faq.user_id where faq.is_deletedq = false LIMIT $1 OFFSET $2;",
-      [pageSize, offset]
+      `select faq.id,faq.question,faq.answer FROM faq WHERE faq.is_deleted = false LIMIT $2 OFFSET $1;`,
+      [offset, pageSize]
+    );
+
+    const Questions = result.rows;
+
+    return Questions;
+  } catch (err) {
+    throw err;
+  }
+};
+Dashboard.updatefaq = async (faqID, question, answer) => {
+  const result = await db.query(
+    "update faq set question=$2,answer=$3 where faq.id = $1 Returning *",
+    [faqID, question, answer]
+  );
+  return result.rows[0];
+};
+
+Dashboard.deletefaq = async (faqID) => {
+  try {
+    const result = await db.query(
+      "UPDATE faq SET is_deleted = TRUE  WHERE id = $1",
+      [faqID]
     );
     return result.rows;
   } catch (err) {
@@ -543,27 +487,10 @@ Dashboard.allquestions = async (page, pageSize) => {
   }
 };
 
-Dashboard.addanswer = async (questionID, answer) => {
-  const result = await db.query(
-    "update faq set answer=$2 where faq.id = $1 Returning *",
-    [questionID, answer]
-  );
-  return result.rows[0];
-};
-
-Dashboard.updateanswer = async (answerID, answer) => {
-  const result = await db.query(
-    "update faq set answer=$2 where faq.id = $1 Returning *",
-    [answerID, answer]
-  );
-  return result.rows[0];
-};
-
-Dashboard.deleteanswer = async (answerID) => {
+Dashboard.countfaq = async () => {
   try {
     const result = await db.query(
-      "UPDATE faq SET is_deleteda = TRUE  WHERE id = $1",
-      [answerID]
+      "select count(id) from faq where is_deleted = false"
     );
     return result.rows;
   } catch (err) {
@@ -582,49 +509,6 @@ Dashboard.login = async (email) => {
     } else {
       return "Email not found or user is denied to access.";
     }
-  } catch (error) {
-    throw error;
-  }
-};
-
-Dashboard.getrecivedmessages = async (sender, reciver) => {
-  try {
-    const result = await db.query(
-      "SELECT chat.id, chat.message, users.user_name FROM chat INNER JOIN users ON users.id = chat.sender_id WHERE chat.sender_id = $1 and chat.receiver_id = $2 ",
-      [sender, reciver]
-    );
-    return result.rows;
-  } catch (error) {
-    throw error;
-  }
-};
-
-Dashboard.getadmins = async () => {
-  try {
-    const result = await db.query(
-      "SELECT users.id, roles.role FROM users INNER JOIN roles ON roles.id = users.role_id WHERE roles.role = 'admin'"
-    );
-    return result.rows.map((admin) => admin.id);
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.sendmessagetouser = async (sendersID, reciverID, message) => {
-  const result = await db.query(
-    "insert into chat (sender_id,receiver_id,message)values ($1,$2,$3)",
-    [sendersID, reciverID, message]
-  );
-  return result.rows;
-};
-
-Dashboard.getsentmessages = async (senderID, reciverID) => {
-  try {
-    const result = await db.query(
-      "SELECT chat.id, chat.message,users.user_name FROM chat INNER JOIN users ON users.id = chat.sender_id WHERE users.role_id = 3 and chat.sender_id = $1 and chat.receiver_id = $2 ",
-      [senderID, reciverID]
-    );
-    return result.rows;
   } catch (error) {
     throw error;
   }
@@ -701,29 +585,6 @@ Dashboard.counttechtips = async () => {
   }
 };
 
-Dashboard.countfaq = async () => {
-  try {
-    const result = await db.query(
-      "select count(id) from faq where is_deletedq = false and is_deleteda = false"
-    );
-    return result.rows[0].count;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.countlessons = async (courseID) => {
-  try {
-    const result = await db.query(
-      "select count(id) from lesson where course_id =$1 and is_deleted = false",
-      [courseID]
-    );
-    return result.rows[0].count;
-  } catch (err) {
-    throw err;
-  }
-};
-
 Dashboard.attendances = async (courseID) => {
   try {
     const result = await db.query(
@@ -748,124 +609,13 @@ Dashboard.countattendances = async (courseID) => {
   }
 };
 
-Dashboard.videoviewers = async (lessonID) => {
+Dashboard.addfaq = async (question, answer) => {
   try {
     const result = await db.query(
-      "select watched_videos.id ,users.user_name,users.email,users.phonenumber,roles.role from watched_videos  inner join users on users.id = watched_videos.user_id inner join roles on roles.id = users.role_id where lesson_id = $1",
-      [lessonID]
+      "INSERT INTO faq (question,answer) VALUES ($1, $2) RETURNING *",
+      [question, answer]
     );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.countvideoviewers = async (lessonID) => {
-  try {
-    const result = await db.query(
-      "select count(id) from watched_videos where lesson_id =$1",
-      [lessonID]
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.topratedcourse = async () => {
-  try {
-    const result = await db.query(
-      "SELECT courses.title FROM courses WHERE rate = (SELECT MAX(rate) FROM courses where is_deleted = false and (courses.category_id = 1 or courses.category_id = 2)) "
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.topratedworkshop = async () => {
-  try {
-    const result = await db.query(
-      "SELECT courses.title FROM courses WHERE rate = (SELECT MAX(rate) FROM courses where is_deleted = false and (courses.category_id = 3 or courses.category_id = 4))"
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.minratedcourse = async () => {
-  try {
-    const result = await db.query(
-      "SELECT courses.title FROM courses WHERE rate = (SELECT MIN(rate) FROM courses where is_deleted = false and (courses.category_id = 1 or courses.category_id = 2))"
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.minratedworkshop = async () => {
-  try {
-    const result = await db.query(
-      "SELECT courses.title FROM courses WHERE rate = (SELECT MIN(rate) FROM courses  where is_deleted = false and (courses.category_id = 3 or courses.category_id = 4))"
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.topratedlesson = async () => {
-  try {
-    const result = await db.query(
-      "SELECT lesson.title FROM lesson WHERE rate = (SELECT MAX(rate) FROM lesson where  is_deleted = false )"
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.minratedlesson = async () => {
-  try {
-    const result = await db.query(
-      "SELECT lesson.title FROM lesson WHERE rate = (SELECT MIN(rate) FROM lesson where is_deleted = false )"
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.mostenrolledcourse = async () => {
-  try {
-    const result = await db.query(
-      "SELECT course_id,courses.title FROM course_attendances inner join courses on courses.id = course_attendances.course_id where courses.is_deleted = false and (courses.category_id = 1 or courses.category_id = 2)GROUP BY course_id,courses.title ORDER BY COUNT(course_id) DESC LIMIT 1"
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.mostenrolledworkshop = async () => {
-  try {
-    const result = await db.query(
-      "course_id,courses.title FROM course_attendances inner join courses on courses.id = course_attendances.course_id where courses.is_deleted = false and (courses.category_id = 3 or courses.category_id = 4) GROUP BY course_id,courses.title ORDER BY COUNT(course_id) DESC LIMIT 1;"
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-};
-
-Dashboard.mostviewedvideo = async (courseID) => {
-  try {
-    const result = await db.query(
-      "SELECT lesson_id,lesson.title FROM watched_videos inner join lesson on lesson.id = watched_videos.lesson_id where lesson.is_deleted = false GROUP BY lesson_id , lesson.title ORDER BY COUNT(lesson_id) DESC LIMIT 1"
-    );
-    return result.rows;
+    return result.rows[0];
   } catch (err) {
     throw err;
   }

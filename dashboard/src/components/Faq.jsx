@@ -1,39 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ReplyModal from "../Modals/ReplayModal";
+import deletee from "../Assets/delete.png";
+import edit from "../Assets/edit.png";
+import ReplayModal from "../Modals/ReplayModal";
+import FaqModal from "../Modals/FaqModal";
 
 function Faq() {
-  const [Faq, setFaqs] = useState([]);
-
+  const [Faqs, setFaqs] = useState([]);
   const [createFaq, setCreatedFaq] = useState({
     question: "",
     answer: "",
   });
-
   const [showModal, setShowModal] = useState(false);
   const [selectedFaq, setSelectedFaq] = useState(null);
-
-  const handleReplyClick = (faq) => {
-    setSelectedFaq(faq);
-    setShowModal(true);
-  };
-
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
 
   useEffect(() => {
-    console.log("useEffect triggered!");
     fetchFaq();
   }, [page, limit]);
 
   const fetchFaq = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/dashboard/allqeustions?page=${page}&limit=${limit}`
+        `http://localhost:8080/dashboard/allfaq?page=${page}&limit=${limit}`
       );
       console.log(response.data.question);
-
-      // Assuming each FAQ object has an 'id' attribute
       console.log("First FAQ ID:", response.data.question[0]?.id);
 
       setFaqs(response.data.question);
@@ -42,21 +35,44 @@ function Faq() {
     }
   };
 
-  const updateAnswer = (newAnswer) => {
-    // Find the FAQ in the state and update the answer
-    const updatedFaqs = Faq.map((faq) =>
-      faq.id === selectedFaq.id ? { ...faq, answer: newAnswer } : faq
+  const deleteFaq = async (faqId) => {
+    try {
+      if (!faqId) {
+        console.error("Invalid FAQ ID");
+        return;
+      }
+      await axios.put(`http://localhost:8080/dashboard/faq/${faqId}/delete`);
+      setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq.id !== faqId));
+      console.log(`FAQ ${faqId} deleted successfully.`);
+    } catch (error) {
+      console.error(`Error deleting FAQ ${faqId}:`, error);
+    }
+  };
+
+  const openModal = (faq) => {
+    setSelectedFaq(faq);
+    setShowModal(true);
+    console.log("Modal is opened");
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedFaq(null);
+  };
+
+  const updateFaq = (updatedFaqData) => {
+    const updatedFaqs = Faqs.map((faq) =>
+      faq.id === updatedFaqData.id ? updatedFaqData : faq
     );
     setFaqs(updatedFaqs);
   };
 
   return (
     <>
-      {" "}
       <div class="flex flex-col mt-5">
         <hr />
         <h1 className=" mt-3 text-2xl font-semibold text-indigo-950  ">
-          Faqs Table
+          FAQs Table
         </h1>
 
         <div class="-m-1.5 overflow-x-auto ">
@@ -70,8 +86,6 @@ function Faq() {
                       type="text"
                       name="hs-table-with-pagination-search"
                       id="hs-table-with-pagination-search"
-                      //   value={searchTerm}
-                      // onChange={handleSearch}
                       class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                       placeholder="Search for items"
                     />
@@ -93,12 +107,12 @@ function Faq() {
                       </svg>
                     </div>
                   </div>
-                  {/* <button
+                  <button
                     onClick={() => setShowCreateModal(true)}
                     className="bg-indigo-950 h-10 w-40 text-white  rounded-md ml-2 hover:bg-indigo-900"
                   >
-                    Create Course
-                  </button> */}
+                    Create FAQ
+                  </button>
                 </div>
               </div>
               <div class=" overflow-x-auto">
@@ -124,16 +138,16 @@ function Faq() {
 
                         <th
                           scope="col"
-                          class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                          class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase"
                         >
-                          Reply
+                          Action
                         </th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                      {Array.isArray(Faq) &&
-                        Faq.length > 0 &&
-                        Faq.map((faq, index) => (
+                      {Array.isArray(Faqs) &&
+                        Faqs.length > 0 &&
+                        Faqs.map((faq, index) => (
                           <tr
                             key={index}
                             className={
@@ -153,10 +167,21 @@ function Faq() {
                             <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                               <button
                                 type="button"
-                                onClick={() => handleReplyClick(faq)}
-                                className={`justify-center inline-flex w-20 bg-indigo-950 items-center text-sm font-semibold rounded-lg border border-transparent text-white disabled:opacity-50 disabled:pointer-events-none`}
+                                onClick={() => openModal(faq)}
+                                class="inline-flex mr-2 items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                               >
-                                Reply
+                                <img className="  h-6 w-6 " src={edit} alt="" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => deleteFaq(faq.id)}
+                                class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                              >
+                                <img
+                                  className=" h-6 w-6 "
+                                  src={deletee}
+                                  alt=""
+                                />
                               </button>
                             </td>
                           </tr>
@@ -164,6 +189,20 @@ function Faq() {
                     </tbody>
                   </table>
                 </div>
+                {showModal && (
+                  <FaqModal
+                    faq={selectedFaq}
+                    closeModal={closeModal}
+                    updateFaq={updateFaq}
+                  />
+                )}
+                {showCreateModal && (
+                  <ReplayModal
+                    addFaq={createFaq}
+                    closeModal={() => setShowCreateModal(false)}
+                    addedFaq={setCreatedFaq}
+                  />
+                )}
               </div>
               <div class="py-1 px-4">
                 <nav class="flex items-center space-x-1">
@@ -173,13 +212,13 @@ function Faq() {
                     disabled={page <= 1}
                     className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                   >
-                    <span aria-hidden="true">«</span>
+                    <span aria-hidden="true">Â«</span>
                     <span className="sr-only">Previous</span>
                   </button>
 
                   <div className="flex items-center space-x-2">
                     {Array.from(
-                      { length: Math.ceil(Faq.length / limit) },
+                      { length: Math.ceil(Faqs.length / limit) },
                       (_, index) => (
                         <button
                           key={index}
@@ -199,11 +238,11 @@ function Faq() {
                   <button
                     type="button"
                     onClick={() => setPage(page + 1)}
-                    disabled={Faq.length < limit}
+                    disabled={Faqs.length < limit}
                     className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                   >
                     <span className="sr-only">Next</span>
-                    <span aria-hidden="true">»</span>
+                    <span aria-hidden="true">Â»</span>
                   </button>
                 </nav>
               </div>
@@ -211,13 +250,6 @@ function Faq() {
           </div>
         </div>
       </div>
-      {showModal && selectedFaq && (
-        <ReplyModal
-          faq={selectedFaq}
-          onClose={() => setShowModal(false)}
-          onUpdateAnswer={updateAnswer}
-        />
-      )}
     </>
   );
 }

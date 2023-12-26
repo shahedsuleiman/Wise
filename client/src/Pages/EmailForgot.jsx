@@ -27,7 +27,7 @@ function EmailForgot() {
         backgroundSize: "cover",
       }}
     >
-      <div class="flex flex-col items-center justify-center  p-4 space-y-4 antialiased text-gray-900 ">
+      <div class="flex flex-col items-center justify-center mt-14 mb-20 p-4 space-y-4 antialiased text-gray-900 ">
         <div class="w-full px-8 max-w-lg space-y-6 bg-white rounded-md py-16">
           <h1 class=" mb-6 text-3xl font-bold text-center">Don't worry</h1>
           <p class="text-center mx-12">
@@ -53,7 +53,7 @@ function EmailForgot() {
             </div>
           </form>
           <div class="text-sm text-gray-600 items-center flex justify-between">
-            <Link to="/">
+            <Link to="/login">
               <p class="text-gray-800 cursor-pointer hover:text-blue-500 inline-flex items-center ml-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +70,6 @@ function EmailForgot() {
                 Back
               </p>
             </Link>
-            <p class="hover:text-blue-500 cursor-pointer">Need help?</p>
           </div>
         </div>
       </div>

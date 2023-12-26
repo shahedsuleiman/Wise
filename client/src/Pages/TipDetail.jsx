@@ -39,7 +39,6 @@ function TipDetail() {
   console.log("techTipData:", posts);
   return (
     <>
-      <Header />
       <div style={{ width: "100%" }}>
         <div class=" flex justify-center ">
           <div class="px-4 sm:px-6 lg:px-8 w-full lg:w-3/4 ">
@@ -120,7 +119,6 @@ function TipDetail() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

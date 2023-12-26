@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import background from "../assets/background.png";
 import FormHeader from "../Components/FormHeader";
-// import Cookies from "js-cookie";
+
 import { useCookies } from "react-cookie";
-import Header from "../Components/Header";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import SignUpWithGoogle from "../Components/SignUpWithGoogle";
@@ -35,6 +35,12 @@ function RegisterPage() {
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirm_password) {
+      setError("Passwords do not match");
+      alert("Passwords do not match");
+
+      return; // Prevent further execution
+    }
     // eslint-disable-next-line no-lone-blocks
     {
       try {
@@ -44,7 +50,11 @@ function RegisterPage() {
         );
         const token = response.data.token;
 
-        console.log("User registered successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "You've Successfully Registered !",
+          text: "Welcome to our website :).",
+        });
         setCookie("Token", token, { path: "/" });
         navigate("/");
       } catch (error) {
@@ -64,7 +74,6 @@ function RegisterPage() {
   };
   return (
     <>
-      <Header />
       <div
         className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 "
         style={{

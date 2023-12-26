@@ -46,8 +46,8 @@ function Faq({ questions, fetchAnswer }) {
           </div>
         </div>
 
-        <div className="-mx-4 flex flex-wrap">
-          <div className="w-full px-4 lg:w-1/2">
+        <div className="-mx-4 flex flex-wrap justify-center ">
+          <div className="grid gap-x-24 lg:grid-cols-2 lg:w-full">
             {answeredQuestions.map((qna, index) => (
               <AccordionItem
                 key={index}

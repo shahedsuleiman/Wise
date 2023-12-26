@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import contact from "../assets/contact.jpg";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
 import Faq from "../Components/Faq";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
@@ -16,7 +14,7 @@ function Contactus() {
 
   const [question, setQuestion] = useState([]);
   const [answer, setAnswer] = useState([]);
-  const { headers } = useAuth();
+
   const [cookies] = useCookies(["token"]);
   const token = cookies.Token;
   const [questions, setQuestions] = useState([]);
@@ -64,7 +62,6 @@ function Contactus() {
 
   return (
     <>
-      <Header />
       <div
         className="w-full  dark:bg-gray-500 py-10 "
         style={{
@@ -105,7 +102,6 @@ function Contactus() {
         </div>
       </div>
       <Faq questions={questions} fetchAnswer={fetchAnswer} />
-      <Footer />
     </>
   );
 }

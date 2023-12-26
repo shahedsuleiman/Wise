@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import work2 from "../assets/work2.jpg";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
+
 import Comment from "../Components/Comment";
 import { useAuth } from "../Context/AuthContext";
 import { useCookies } from "react-cookie";
@@ -46,7 +44,7 @@ function WorkshopDetails() {
         course: [
           {
             ...prevDetails.course[0],
-            enrolled: true, // Assuming you have an 'enrolled' field in your course details
+            enrolled: true,
           },
         ],
       }));
@@ -80,7 +78,6 @@ function WorkshopDetails() {
 
   return (
     <>
-      <Header />
       <section class="flex  mt-20 items-center bg-[#F7F1EE ] font-poppins dark:bg-gray-800 ">
         <div class="justify-center flex-1 max-w-6xl py-4 mx-auto lg:py-6 md:px-6">
           <div class="px-4 mb-10 md:text-center md:mb-10">
@@ -204,7 +201,6 @@ function WorkshopDetails() {
           tabindex="0"
         ></iframe>
       </div>
-      <Footer />
     </>
   );
 }

@@ -18,6 +18,7 @@ const faqRoute = require("./Routes/faqRoute");
 const chatbotRoute = require("./Routes/chatbotRoute");
 const homeRoute = require("./Routes/homeRoute");
 const testimonialRoute = require("./Routes/testimonialRoute");
+const contactusRoute = require("./Routes/contactusRoute");
 app.use(session({ secret: "cats", resave: true, saveUninitialized: true }));
 
 app.use(express.json());
@@ -37,6 +38,7 @@ app.use(faqRoute);
 app.use(chatbotRoute);
 app.use(homeRoute);
 app.use(testimonialRoute);
+app.use(contactusRoute);
 
 app.listen(port, () => {
   console.log(`server runnning in port ${port}`);

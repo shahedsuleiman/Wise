@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
 import { useAuth } from "../Context/AuthContext";
 import { useCookies } from "react-cookie";
 import Swal from "sweetalert2";
@@ -55,15 +53,7 @@ function CoursesOnsite() {
         title: "Enrollment Successful!",
         text: "You have successfully enrolled in the course.",
       });
-      setCourseDetails((prevDetails) => ({
-        ...prevDetails,
-        course: [
-          {
-            ...prevDetails.course[0],
-            enrolled: true, // Assuming you have an 'enrolled' field in your course details
-          },
-        ],
-      }));
+
       console.log("Enrollment Response:", enrollResponse.data);
     } catch (error) {
       Swal.fire({
@@ -77,7 +67,6 @@ function CoursesOnsite() {
   };
   return (
     <>
-      <Header />
       <div className="container mx-auto mt-24 px-4 lg:px-0">
         <div className="lg:flex lg:flex-row lg:space-x-4">
           <div className="lg:w-2/3 mb-8 lg:mb-0">
@@ -201,7 +190,6 @@ function CoursesOnsite() {
           tabindex="0"
         ></iframe>
       </div>
-      <Footer />
     </>
   );
 }

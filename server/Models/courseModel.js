@@ -126,7 +126,8 @@ Course.allelderliesworkshops = async () => {
 Course.detail = async (courseId) => {
   try {
     const queryResult = await db.query(
-      `    SELECT 
+      `
+        SELECT 
           courses.id,
           courses.title,
           courses.description,
@@ -143,7 +144,8 @@ Course.detail = async (courseId) => {
           courses
           INNER JOIN categories ON categories.id = courses.category_id
         WHERE 
-          courses.id=$1 and courses.is_deleted = false;`,
+          courses.id=$1 and courses.is_deleted = false;
+      `,
       [courseId]
     );
 
@@ -198,12 +200,12 @@ Course.alllessonspaidauth = async (userID, courseID) => {
         const userRole = userRoleResult.rows[0].role;
         if (userRole === "subscriber") {
           result = await db.query(
-            "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id INNER JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
+            "SELECT lesson.id, lesson.title, REPLACE(lesson.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
             [courseID]
           );
         } else if (userRole === "unsubscriber") {
           result = await db.query(
-            "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id INNER JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false limit 2;",
+            "SELECT lesson.id, lesson.title, REPLACE(lesson.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false limit 2;",
             [courseID]
           );
         }
@@ -253,7 +255,7 @@ Course.alllessonspaidauth = async (userID, courseID) => {
 Course.alllessonspaid = async (courseID) => {
   try {
     const result = await db.query(
-      "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id INNER JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false limit 2;",
+      "SELECT lesson.id, lesson.title, REPLACE(lesson.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false limit 2;",
       [courseID]
     );
 
@@ -280,7 +282,7 @@ Course.alllessonspaid = async (courseID) => {
 Course.alllessonsfree = async (courseID) => {
   try {
     const result = await db.query(
-      "SELECT lesson.id, lesson.title, REPLACE(lesson_image.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id INNER JOIN lesson_image ON lesson.id = lesson_image.lesson_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
+      "SELECT lesson.id, lesson.title, REPLACE(lesson.image, 'https://storage.googleapis.com/wiseassist-b8a8a.appspot.com/images/', '') AS image FROM lesson INNER JOIN courses ON courses.id = lesson.course_id WHERE courses.id = $1 AND lesson.is_deleted = false;",
       [courseID]
     );
 
@@ -334,29 +336,6 @@ Course.lessonpage = async (lessonID) => {
   }
 };
 
-Course.addratetocourse = async (courseID, userID, rate) => {
-  try {
-    const insertrating = await db.query(
-      `
-            INSERT INTO course_reaction (rate, user_id, course_id) VALUES ($1, $2, $3) RETURNING rate
-            `,
-      [rate, userID, courseID]
-    );
-
-    insertrating.rows[0].rate;
-
-    const result = await db.query(
-      "UPDATE courses SET rate= (SELECT AVG(rate) FROM course_reaction WHERE course_id = $1) WHERE id = $1 RETURNING *",
-      [courseID]
-    );
-
-    return result;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 Course.addcommenttocourse = async (courseID, userID, comment) => {
   try {
     const result = await db.query(
@@ -379,29 +358,6 @@ Course.getcoursecomments = async (courseID) => {
     return result.rows;
   } catch (error) {
     console.error(error.message);
-    throw error;
-  }
-};
-
-Course.addratetolesson = async (lessonID, userID, rate) => {
-  try {
-    const insertrating = await db.query(
-      `
-            INSERT INTO lesson_reaction (rate, user_id, lesson_id) VALUES ($1, $2, $3) RETURNING rate
-            `,
-      [rate, userID, lessonID]
-    );
-
-    insertrating.rows[0].rate;
-
-    const result = await db.query(
-      "UPDATE lesson SET rate= (SELECT AVG(rate) FROM lesson_reaction WHERE lesson_id = $1) WHERE id = $1 RETURNING *",
-      [lessonID]
-    );
-
-    return result;
-  } catch (error) {
-    console.error(error);
     throw error;
   }
 };

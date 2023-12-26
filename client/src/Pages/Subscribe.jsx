@@ -15,7 +15,6 @@ function Subscribe() {
   );
   return (
     <>
-      <Header />
       <div class="bg-white ">
         <div class="container px-6 py-20 mx-auto">
           <div class="xl:items-center xl:-mx-8 xl:flex">
@@ -267,7 +266,6 @@ function Subscribe() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

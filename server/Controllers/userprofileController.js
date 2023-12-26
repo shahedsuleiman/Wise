@@ -121,18 +121,28 @@ const deletefromwitchlist = async (req, res) => {
 const regincourse = async (req, res) => {
   try {
     const courseID = req.params.id;
+    const userID = req.user.userId;
+
+    const isEnrolled = await Profile.isenrolled(userID, courseID);
+    if (isEnrolled) {
+      res.status(409).json({ success: false, error: "you already enrolled" });
+    }
 
     const courseDetails = await Course.detail(courseID);
-
     const is_paid = courseDetails[0].is_paid;
     let seats = courseDetails[0].seats;
-    if (seats == 0) {
-      throw new Error(
-        "enroll is not available due to the limited number of seats having expired"
-      );
+
+    if (seats === 0) {
+      res
+        .status(409)
+        .json({
+          success: false,
+          error:
+            "Enrollment is not available due to the limited number of seats having expired",
+        });
     }
+
     if (is_paid === "Paid") {
-      const userID = req.user.userId;
       await Profile.reginpaidcourse(userID, courseID);
       res.status(201).json({
         success: true,
@@ -140,7 +150,6 @@ const regincourse = async (req, res) => {
       });
       seats -= 1;
     } else if (is_paid === "Free") {
-      const userID = req.user.userId;
       await Profile.reginfreecourse(userID, courseID);
       res.status(201).json({
         success: true,
