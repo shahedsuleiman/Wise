@@ -384,13 +384,25 @@ Profile.updateinfo = async (
   phonenumber
 ) => {
   try {
-    const result = await db.query(
-      "update users set first_name = $2 , last_name = $3 ,user_name =$4, email = $5, phonenumber = $6 where id = $1 ",
-      [userID, first_name, last_name, user_name, email, phonenumber]
+    const query =
+      "UPDATE users SET first_name = $2, last_name = $3, user_name = $4, email = $5, phonenumber = $6 WHERE id = $1";
+    const result = await db.query(query, [
+      userID,
+      first_name,
+      last_name,
+      user_name,
+      email,
+      phonenumber,
+    ]);
+
+    console.log(
+      `User info updated successfully. Rows affected: ${result.rowCount}`
     );
+
     return result.rows;
   } catch (err) {
-    throw err;
+    console.error("Error updating user info:", err);
+    throw err; // Consider whether you want to re-throw the error or handle it differently
   }
 };
 

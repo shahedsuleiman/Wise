@@ -11,7 +11,7 @@ import { useAuth } from "../Context/AuthContext";
 import GoolgeSignInButton from "../Components/GoogleSignup";
 
 const LoginPage = () => {
-  const { isLoggedIn, login, logout } = useAuth();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",

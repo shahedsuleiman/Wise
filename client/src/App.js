@@ -40,7 +40,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="*" element={<NotFound />} />
-
             <Route path="/Login" element={<LoginPage />} />
             <Route path="/signup" element={<RegisterPage />} />
             <Route path="/workshop" element={<Workshops />} />
@@ -52,11 +51,9 @@ function App() {
             ) : (
               <Route path="/profile" element={<LoginPage />} />
             )}
-
             <>
               <Route path="/techtips" element={<Techtip />} />
             </>
-
             <Route path="/TipDetail/:id" element={<TipDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<Contactus />} />

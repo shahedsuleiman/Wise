@@ -19,7 +19,7 @@ function SidebarDash() {
   };
   const handleLogout = () => {
     logout();
-    navigate("/"); // Navigating to the login page
+    navigate("/");
   };
   return (
     <>

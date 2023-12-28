@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../Assets/logo.png";
+import background from "../Assets/background.png";
 import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -52,10 +52,16 @@ const Login = () => {
 
   return (
     <>
-      <div class="font-[sans-serif] text-indigo-950">
-        <div class="min-h-screen flex fle-col items-center justify-center py-6 px-4">
-          <div class="grid md:grid-cols-2 items-center gap-4 max-w-7xl w-full">
-            <div class="border border-gray-300 rounded-md p-6 max-w-md shadow-[0_2px_22px_-4px_rgb(64, 69, 122)] max-md:mx-auto">
+      <div
+        class="font-[sans-serif] text-indigo-950"
+        style={{
+          backgroundImage: `url(${background})`,
+          backgroundSize: "cover",
+        }}
+      >
+        <div className=" min-h-screen flex fle-col items-center justify-center py-6 px-4">
+          <div className="grid md:grid-cols-2 items-center gap-4 max-w-7xl w-full">
+            <div className="border border-gray-300 rounded-md p-6 max-w-md shadow-[0_2px_22px_-4px_rgb(64, 69, 122)] max-md:mx-auto">
               <form class="space-y-6" onSubmit={handleLogin}>
                 <div class="mb-10">
                   <h3 class="text-3xl font-extrabold">Sign in</h3>
@@ -135,13 +141,6 @@ const Login = () => {
                 </div>
               </form>
             </div>
-            {/* <div class="lg:h-[400px] md:h-[300px] max-md:mt-10">
-              <img
-                src="https://readymadeui.com/login-image.webp"
-                class="w-full h-full object-cover"
-                alt="Dining Experience"
-              />
-            </div> */}
           </div>
         </div>
       </div>

@@ -60,7 +60,6 @@ router.put(
   middleware.authorize,
   userprofileController.updatepassword
 );
-
 router.put(
   "/myprofile/unrolled/:id",
   middleware.authorize,
